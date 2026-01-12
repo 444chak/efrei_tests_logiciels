@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { login } from "../auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -37,6 +39,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,6 +62,9 @@ export default function LoginPage() {
     if (result?.error) {
       setError(result.error);
       setLoading(false);
+    } else if (result?.success) {
+      toast.success("Logged in successfully");
+      router.push("/");
     }
   }
 

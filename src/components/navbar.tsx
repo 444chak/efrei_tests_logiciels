@@ -63,9 +63,10 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="" alt={user.email || "User"} />
                   <AvatarFallback>
-                    {user.email?.charAt(0).toUpperCase() || (
-                      <UserIcon className="h-4 w-4" />
-                    )}
+                    {user.user_metadata?.username?.charAt(0).toUpperCase() ||
+                      user.email?.charAt(0).toUpperCase() || (
+                        <UserIcon className="h-4 w-4" />
+                      )}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -73,7 +74,9 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">User</p>
+                  <p className="text-sm font-medium leading-none">
+                    {user.user_metadata?.username || "User"}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user.email}
                   </p>

@@ -60,12 +60,21 @@ export default async function Home() {
                 <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                   Booking made easy.
                 </h2>
-                <Link
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-                  href="/signup"
-                >
-                  Create an account
-                </Link>
+                {user ? (
+                  <Link
+                    className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                    href="/dashboard"
+                  >
+                    Get Started
+                  </Link>
+                ) : (
+                  <Link
+                    className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+                    href="/signup"
+                  >
+                    Create an account
+                  </Link>
+                )}
               </div>
               <div className="flex flex-col items-start space-y-4">
                 <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
@@ -82,7 +91,7 @@ export default async function Home() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 EasyBooking. All rights reserved.
+          © 2026 EasyBooking. All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
