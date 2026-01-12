@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type Room = {
@@ -18,7 +19,7 @@ export default function RoomsList() {
     useEffect(() => {
         let mounted = true;
 
-        fetch("/rooms")
+        fetch("/api/rooms")
             .then(async (res) => {
                 if (!res.ok) {
                     const text = await res.text();
@@ -83,19 +84,25 @@ export default function RoomsList() {
     return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {rooms.map((room) => (
-                <Card key={room.id}>
-                    <CardHeader>
-                        <CardTitle>{room.name ?? `Room ${room.id}`}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        {room.description && (
-                            <p className="text-sm text-muted-foreground">{room.description}</p>
-                        )}
-                        {room.capacite && (
-                            <p className="mt-2 text-sm">Capacité : {room.capacite} personne(s)</p>
-                        )}
-                    </CardContent>
-                </Card>
+                <Link
+                    key={room.id}
+                    href={`/rooms/details/${encodeURIComponent(String(room.id))}`}
+                    className="block"
+                >
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>{room.name ?? `Room ${room.id}`}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {room.description && (
+                                <p className="text-sm text-muted-foreground">{room.description}</p>
+                            )}
+                            {room.capacite && (
+                                <p className="mt-2 text-sm">Capacité : {room.capacite} personne(s)</p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </Link>
             ))}
         </div>
     );
