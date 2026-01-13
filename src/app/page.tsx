@@ -22,26 +22,26 @@ export default async function Home() {
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Book Your Perfect Room
+                  Réservez votre salle idéale
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  EasyBooking makes it simple to find and reserve rooms for your
-                  meetings, events, or stays.
+                  EasyBooking simplifie la recherche et la réservation de salles
+                  pour vos réunions et événements.
                 </p>
               </div>
               <div className="space-x-4">
                 {user ? (
                   <Link href="/dashboard">
-                    <Button size="lg">Get Started</Button>
+                    <Button size="lg">Commencer</Button>
                   </Link>
                 ) : (
                   <>
                     <Link href="/signup">
-                      <Button size="lg">Get Started</Button>
+                      <Button size="lg">Commencer</Button>
                     </Link>
                     <Link href="/login">
                       <Button variant="outline" size="lg">
-                        Log In
+                        Se connecter
                       </Button>
                     </Link>
                   </>
@@ -58,31 +58,31 @@ export default async function Home() {
                   Simple
                 </div>
                 <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                  Booking made easy.
+                  La réservation simplifiée.
                 </h2>
                 {user ? (
                   <Link
                     className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
                     href="/dashboard"
                   >
-                    Get Started
+                    Commencer
                   </Link>
                 ) : (
                   <Link
                     className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
                     href="/signup"
                   >
-                    Create an account
+                    Créer un compte
                   </Link>
                 )}
               </div>
               <div className="flex flex-col items-start space-y-4">
                 <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
-                  Fast
+                  Rapide
                 </div>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed">
-                  Our platform is designed to be fast and efficient. Find what
-                  you need in seconds.
+                  Notre plateforme est conçue pour être rapide et efficace.
+                  Trouvez ce dont vous avez besoin en quelques secondes.
                 </p>
               </div>
             </div>
@@ -91,14 +91,14 @@ export default async function Home() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2026 EasyBooking. All rights reserved.
+          © 2026 EasyBooking. Tous droits réservés.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
+            Conditions d'utilisation
           </Link>
           <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
+            Confidentialité
           </Link>
         </nav>
       </footer>
