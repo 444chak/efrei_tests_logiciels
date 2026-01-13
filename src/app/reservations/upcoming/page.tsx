@@ -9,7 +9,8 @@ import { useUserReservations } from "@/hooks/useUserReservations";
 
 export default function UpcomingReservationsPage() {
   const router = useRouter();
-  const { reservations, loading, error } = useUserReservations("upcoming");
+  const { reservations, loading, error, refresh } =
+    useUserReservations("upcoming");
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
@@ -38,7 +39,7 @@ export default function UpcomingReservationsPage() {
           </div>
         ) : (
           <div className="grid gap-6">
-            <BookedList reservations={reservations} />
+            <BookedList reservations={reservations} onRefresh={refresh} />
           </div>
         )}
       </div>

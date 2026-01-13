@@ -8,6 +8,8 @@ export function useUserReservations(filter: ReservationFilter = "upcoming") {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   useEffect(() => {
     let mounted = true;
     setLoading(true);
@@ -21,12 +23,6 @@ export function useUserReservations(filter: ReservationFilter = "upcoming") {
         }
         const data = await res.json();
 
-        // For history, we might want to ensure is_own_reservation is set if the API doesn't
-        // But the API just returns what Supabase returns.
-        // In the original code, history added `is_own_reservation: true`.
-        // We should probably handle that in the component or here.
-        // Since this fetch is literally "User's bookings", they are all "own".
-        // Let's add it for consistency with the UI components that expect it.
         const formattedData = data.map((item: any) => ({
           ...item,
           is_own_reservation: true,
@@ -52,7 +48,11 @@ export function useUserReservations(filter: ReservationFilter = "upcoming") {
     return () => {
       mounted = false;
     };
-  }, [filter]);
+  }, [filter, refreshTrigger]);
 
-  return { reservations, loading, error };
+  const refresh = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
+  return { reservations, loading, error, refresh };
 }

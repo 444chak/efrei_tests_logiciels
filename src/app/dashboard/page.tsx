@@ -14,7 +14,8 @@ export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
 
-  const { reservations, loading, error } = useUserReservations("upcoming");
+  const { reservations, loading, error, refresh } =
+    useUserReservations("upcoming");
 
   const {
     reservations: historicReservations,
@@ -76,7 +77,11 @@ export default function DashboardPage() {
           ) : error ? (
             <p className="p-6 text-red-500">Erreur: {error}</p>
           ) : (
-            <BookedList reservations={reservations} limit={2} />
+            <BookedList
+              reservations={reservations}
+              limit={2}
+              onRefresh={refresh}
+            />
           )}
 
           <RoomReservationsHistory
