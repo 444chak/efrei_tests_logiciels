@@ -1,69 +1,105 @@
-"use client";
-
-import React from "react";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
-type Room = {
-    id: number;
-    name?: string;
-    description?: string;
-    capacite?: number;
-};
-
-export interface Reservation {
-    id: number;
-    created_at: string;
-    start_time: string;
-    end_time: string;
-    rooms: Room;
-};
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Reservation } from "@/types";
+import { ReservationsList } from "./reservations-list";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 interface BookedListProps {
-    reservations: Reservation[];
+  reservations: Reservation[];
+  limit?: number;
+  onRefresh?: () => void;
 }
 
-export function BookedList({ reservations }: BookedListProps) {
-    if (!reservations || reservations.length === 0) {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Mes Réservations</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">Aucune réservation trouvée.</p>
-                </CardContent>
-            </Card>
-        );
-    }
+export function BookedList({
+  reservations,
+  limit,
+  onRefresh,
+}: BookedListProps) {
+  const router = useRouter();
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-    return (
-        <div className="grid gap-6 p-6">
-            {reservations.map((reservation) => (
-                <Link
-                    key={reservation.id}
-                    href={`/room/detail/${encodeURIComponent(String(reservation.rooms.id))}`}
-                    className="block h-full"
-                >
-                    <Card className="h-full">
-                        <CardHeader>
-                            <CardTitle>{reservation.rooms.name ?? `Room ${reservation.rooms.id}`}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {reservation.rooms.description && (
-                                <p className="text-sm text-muted-foreground">{reservation.rooms.description}</p>
-                            )}
-                            {reservation.rooms.capacite && (
-                                <p className="mt-2 text-sm">Capacité : {reservation.rooms.capacite} personne(s)</p>
-                            )}
-                            <div className="mt-4 pt-4 border-t text-xs text-muted-foreground">
-                                <p>Du : {new Date(reservation.start_time).toLocaleString()}</p>
-                                <p>Au : {new Date(reservation.end_time).toLocaleString()}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
-            ))}
-        </div>
-    );
+  const handleCancelClick = (id: number) => {
+    setDeleteId(id);
+  };
+
+  const confirmCancel = async () => {
+    if (!deleteId) return;
+
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/reservations/${deleteId}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur lors de l'annulation");
+      }
+
+      toast.success("Réservation annulée avec succès");
+      router.refresh();
+      onRefresh?.();
+    } catch (error) {
+      console.error(error);
+      toast.error("Impossible d'annuler la réservation");
+    } finally {
+      setIsDeleting(false);
+      setDeleteId(null);
+    }
+  };
+
+  return (
+    <>
+      <ReservationsList
+        reservations={reservations}
+        limit={limit}
+        title="Mes Réservations"
+        showRoomName={true}
+        linkToRoom={true}
+        footerAction={{
+          label: `Voir tout (${reservations.length})`,
+          href: "/reservations/upcoming",
+        }}
+        onCancel={handleCancelClick}
+      />
+
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(open) => !open && setDeleteId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible. Cela annulera votre réservation
+              définitivement.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmCancel();
+              }}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+            >
+              {isDeleting ? "Annulation..." : "Confirmer l'annulation"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
 }

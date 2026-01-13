@@ -5,19 +5,23 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RoomsList from "@/components/roomsList";
-import { BookedList, Reservation } from "@/components/bookedList";
-import { RoomReservationsHistory, Reservation as HistoricReservation } from "@/components/roomReservationsHistory";
+import { BookedList } from "@/components/bookedList";
+import { Reservation } from "@/types";
+import { RoomReservationsHistory } from "@/components/roomReservationsHistory";
+import { useUserReservations } from "@/hooks/useUserReservations";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const [historicReservations, setHistoricReservations] = useState<HistoricReservation[]>([]);
-  const [historicLoading, setHistoricLoading] = useState(true);
-  const [historicError, setHistoricError] = useState<string | null>(null);
+  const { reservations, loading, error, refresh } =
+    useUserReservations("upcoming");
+
+  const {
+    reservations: historicReservations,
+    loading: historicLoading,
+    error: historicError,
+  } = useUserReservations("history");
 
   useEffect(() => {
     let mounted = true;
@@ -38,51 +42,6 @@ export default function DashboardPage() {
 
     checkUser();
 
-    // Reservations futures
-
-    const fetchReservations = fetch("/api/rooms/booked")
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (mounted) setReservations(data);
-      })
-      .catch((err) => {
-        if (mounted) setError(err.message ?? String(err));
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
-
-    // Historic reservations
-    fetch("/api/rooms/booked/historic/")
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (mounted) {
-          // Add is_own_reservation: true to each item as these are the user's own history
-          const formattedData = data.map((item: any) => ({
-            ...item,
-            is_own_reservation: true,
-          }));
-          setHistoricReservations(formattedData);
-        }
-      })
-      .catch((err) => {
-        if (mounted) setHistoricError(err.message ?? String(err));
-      })
-      .finally(() => {
-        if (mounted) setHistoricLoading(false);
-      });
-
     return () => {
       mounted = false;
     };
@@ -100,42 +59,41 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-7xl">
         <h1 className="mb-8 text-3xl font-bold text-gray-900">Dashboard</h1>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Welcome back!</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                You are logged in as {user.email}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Bookings</CardTitle>
-            </CardHeader>
-            {loading && reservations.length === 0 && !error ? (
-              <p className="p-6 text-muted-foreground">Chargement des réservations...</p>
-            ) : error ? (
-              <p className="p-6 text-red-500">Erreur: {error}</p>
-            ) : (
-              <BookedList reservations={reservations} />
-            )}
-          </Card>
-
-          <div className="md:col-span-2 lg:col-span-3">
-            <RoomReservationsHistory
-              reservations={historicReservations}
-              loading={historicLoading}
-              error={historicError}
+        <Card className="col-span-full mb-6">
+          <CardHeader>
+            <CardTitle>Welcome back!</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              You are logged in as {user.email}
+            </p>
+          </CardContent>
+        </Card>
+        <div className="col-span-full grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+          {loading && reservations.length === 0 && !error ? (
+            <p className="p-6 text-muted-foreground">
+              Chargement des réservations...
+            </p>
+          ) : error ? (
+            <p className="p-6 text-red-500">Erreur: {error}</p>
+          ) : (
+            <BookedList
+              reservations={reservations}
               limit={2}
-              showSeeAllLink={true}
+              onRefresh={refresh}
             />
-          </div>
+          )}
 
-          <div className="md:col-span-2 lg:col-span-3">
+          <RoomReservationsHistory
+            reservations={historicReservations}
+            loading={historicLoading}
+            error={historicError}
+            limit={2}
+            showSeeAllLink={true}
+            className="lg:col-span-1"
+          />
+
+          <div className="col-span-full md:col-span-2 lg:col-span-2">
             <h2 className="mb-4 text-xl font-semibold">Rooms disponibles</h2>
             <RoomsList />
           </div>
