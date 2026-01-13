@@ -69,6 +69,7 @@ export function RoomReservationsList({
                         weekday: "short",
                         day: "numeric",
                         month: "long",
+                        year: "numeric",
                       })}
                     </span>
                     <span className="text-muted-foreground hidden sm:inline">

@@ -6,7 +6,10 @@ import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RoomsList from "@/components/roomsList";
 import { BookedList, Reservation } from "@/components/bookedList";
-import { RoomReservationsHistory, Reservation as HistoricReservation } from "@/components/roomReservationsHistory";
+import {
+  RoomReservationsHistory,
+  Reservation as HistoricReservation,
+} from "@/components/roomReservationsHistory";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -15,7 +18,9 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [historicReservations, setHistoricReservations] = useState<HistoricReservation[]>([]);
+  const [historicReservations, setHistoricReservations] = useState<
+    HistoricReservation[]
+  >([]);
   const [historicLoading, setHistoricLoading] = useState(true);
   const [historicError, setHistoricError] = useState<string | null>(null);
 
@@ -112,18 +117,15 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Bookings</CardTitle>
-            </CardHeader>
-            {loading && reservations.length === 0 && !error ? (
-              <p className="p-6 text-muted-foreground">Chargement des réservations...</p>
-            ) : error ? (
-              <p className="p-6 text-red-500">Erreur: {error}</p>
-            ) : (
-              <BookedList reservations={reservations} />
-            )}
-          </Card>
+          {loading && reservations.length === 0 && !error ? (
+            <p className="p-6 text-muted-foreground">
+              Chargement des réservations...
+            </p>
+          ) : error ? (
+            <p className="p-6 text-red-500">Erreur: {error}</p>
+          ) : (
+            <BookedList reservations={reservations} limit={2} />
+          )}
 
           <div className="md:col-span-2 lg:col-span-3">
             <RoomReservationsHistory
