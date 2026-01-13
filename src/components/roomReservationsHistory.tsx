@@ -11,19 +11,30 @@ export interface Reservation {
   end_time: string;
   status: string;
   is_own_reservation: boolean;
+  rooms?: {
+    id: number;
+    name: string;
+  };
 }
 
 interface RoomReservationsListProps {
   reservations: Reservation[];
   loading: boolean;
   error: string | null;
+  limit?: number;
 }
 
 export function RoomReservationsHistory({
   reservations,
   loading,
   error,
-}: RoomReservationsListProps) {
+  limit,
+  showSeeAllLink = false,
+}: RoomReservationsListProps & { showSeeAllLink?: boolean }) {
+  const displayedReservations = limit
+    ? reservations.slice(0, limit)
+    : reservations;
+
   return (
     <Card className="max-w-3xl mx-auto mt-6">
       <CardHeader>
@@ -43,13 +54,20 @@ export function RoomReservationsHistory({
           </p>
         )}
 
-        {!loading && !error && reservations.length > 0 && (
-          <div className="grid gap-4">
-            {reservations.map((res) => (
+        {!loading && !error && displayedReservations.length > 0 && (
+          <div className="divide-y divide-border rounded-md border text-sm">
+            {displayedReservations.map((res) => (
               <div
                 key={res.id}
-                className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm"
+                className={`p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors ${res.is_own_reservation
+                  ? "bg-primary/5 hover:bg-primary/10"
+                  : "hover:bg-muted/50"
+                  }`}
               >
+                <p>
+                  <strong>Nom de la salle :</strong>{" "}
+                  {res.rooms?.name || `Salle ${res.room_id}`}
+                </p>
                 <p>
                   <strong>Début:</strong>{" "}
                   {new Date(res.start_time).toLocaleDateString("fr-FR", {
@@ -70,18 +88,13 @@ export function RoomReservationsHistory({
                     minute: "2-digit",
                   })}
                 </p>
-                <strong>Statut: </strong>
-                {res.is_own_reservation ? (
-                  <span className="text-green-600 font-semibold mt-2">
-                    Réservé par vous
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-semibold mt-2">
-                    Réservé par quelqu'un d'autre
-                  </span>
-                )}
               </div>
             ))}
+            {showSeeAllLink && (
+              <div className="p-4 text-center">
+                <a href="/reservations/history" className="text-blue-600 hover:underline">Voir tout</a>
+              </div>
+            )}
           </div>
         )}
       </CardContent>
