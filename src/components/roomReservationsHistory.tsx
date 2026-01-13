@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 import { User } from "@supabase/supabase-js";
+import { formatDate, formatTime } from "@/lib/utils";
 
 import { Reservation } from "@/types";
 
@@ -45,24 +46,12 @@ export function RoomReservationsHistory({
                 className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm"
               >
                 <p>
-                  <strong>Début:</strong>{" "}
-                  {new Date(res.start_time).toLocaleDateString("fr-FR", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  <strong>Début:</strong> {formatDate(res.start_time)} •{" "}
+                  {formatTime(res.start_time)}
                 </p>
                 <p>
-                  <strong>Fin:</strong>{" "}
-                  {new Date(res.end_time).toLocaleDateString("fr-FR", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  <strong>Fin:</strong> {formatDate(res.end_time)} •{" "}
+                  {formatTime(res.end_time)}
                 </p>
                 <strong>Statut: </strong>
                 {res.is_own_reservation ? (

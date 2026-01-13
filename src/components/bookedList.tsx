@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
+import { cn, formatDate, formatTime } from "@/lib/utils";
 import { Reservation } from "@/types";
 
 interface BookedListProps {
@@ -50,34 +50,12 @@ export function BookedList({ reservations, limit }: BookedListProps) {
                       </p>
                     )}
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <span>
-                        {new Date(reservation.start_time).toLocaleDateString(
-                          "fr-FR",
-                          {
-                            weekday: "short",
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
-                      </span>
+                      <span>{formatDate(reservation.start_time)}</span>
                       <span className="hidden sm:inline">•</span>
                       <span>
-                        {new Date(reservation.start_time).toLocaleTimeString(
-                          "fr-FR",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
+                        {formatTime(reservation.start_time)}
                         {" - "}
-                        {new Date(reservation.end_time).toLocaleTimeString(
-                          "fr-FR",
-                          {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
+                        {formatTime(reservation.end_time)}
                       </span>
                     </div>
                   </div>
