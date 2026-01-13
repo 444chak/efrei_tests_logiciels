@@ -58,18 +58,17 @@ export default function DashboardPage() {
       <div className="mx-auto max-w-7xl">
         <h1 className="mb-8 text-3xl font-bold text-gray-900">Dashboard</h1>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Welcome back!</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                You are logged in as {user.email}
-              </p>
-            </CardContent>
-          </Card>
-
+        <Card className="col-span-full mb-6">
+          <CardHeader>
+            <CardTitle>Welcome back!</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              You are logged in as {user.email}
+            </p>
+          </CardContent>
+        </Card>
+        <div className="col-span-full grid gap-4 md:grid-cols-2 lg:grid-cols-2">
           {loading && reservations.length === 0 && !error ? (
             <p className="p-6 text-muted-foreground">
               Chargement des réservations...
@@ -80,17 +79,16 @@ export default function DashboardPage() {
             <BookedList reservations={reservations} limit={2} />
           )}
 
-          <div className="md:col-span-2 lg:col-span-3">
-            <RoomReservationsHistory
-              reservations={historicReservations}
-              loading={historicLoading}
-              error={historicError}
-              limit={2}
-              showSeeAllLink={true}
-            />
-          </div>
+          <RoomReservationsHistory
+            reservations={historicReservations}
+            loading={historicLoading}
+            error={historicError}
+            limit={2}
+            showSeeAllLink={true}
+            className="lg:col-span-1"
+          />
 
-          <div className="md:col-span-2 lg:col-span-3">
+          <div className="col-span-full md:col-span-2 lg:col-span-2">
             <h2 className="mb-4 text-xl font-semibold">Rooms disponibles</h2>
             <RoomsList />
           </div>
