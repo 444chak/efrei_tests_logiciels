@@ -1,37 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BookedList, Reservation } from "@/components/bookedList";
+import { BookedList } from "@/components/bookedList";
+import { useUserReservations } from "@/hooks/useUserReservations";
 
 export default function UpcomingReservationsPage() {
   const router = useRouter();
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        const res = await fetch("/api/rooms/booked");
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `HTTP ${res.status}`);
-        }
-        const data = await res.json();
-        setReservations(data);
-      } catch (err: any) {
-        setError(err.message ?? String(err));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReservations();
-  }, []);
+  const { reservations, loading, error } = useUserReservations("upcoming");
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">

@@ -1,14 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-export interface Reservation {
-  id: number;
-  id_room: number;
-  user_id: string;
-  start_time: string;
-  end_time: string;
-  is_own_reservation: boolean;
-}
+import { Reservation } from "@/types";
 
 interface RoomReservationsListProps {
   reservations: Reservation[];

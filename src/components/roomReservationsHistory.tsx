@@ -3,15 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 import { User } from "@supabase/supabase-js";
 
-export interface Reservation {
-  id: number;
-  room_id: number;
-  user_id: string;
-  start_time: string;
-  end_time: string;
-  status: string;
-  is_own_reservation: boolean;
-}
+import { Reservation } from "@/types";
 
 interface RoomReservationsListProps {
   reservations: Reservation[];
@@ -27,7 +19,9 @@ export function RoomReservationsHistory({
   return (
     <Card className="max-w-3xl mx-auto mt-6">
       <CardHeader>
-        <CardTitle className="text-2xl md:text-3xl">Réservations passées</CardTitle>
+        <CardTitle className="text-2xl md:text-3xl">
+          Réservations passées
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {loading && (

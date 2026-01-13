@@ -4,20 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-type Room = {
-  id: number;
-  name?: string;
-  description?: string;
-  capacite?: number;
-};
-
-export interface Reservation {
-  id: number;
-  created_at: string;
-  start_time: string;
-  end_time: string;
-  rooms: Room;
-}
+import { Reservation } from "@/types";
 
 interface BookedListProps {
   reservations: Reservation[];
@@ -45,7 +32,7 @@ export function BookedList({ reservations, limit }: BookedListProps) {
               <Link
                 key={reservation.id}
                 href={`/room/detail/${encodeURIComponent(
-                  String(reservation.rooms.id)
+                  String(reservation.rooms?.id)
                 )}`}
                 className="block hover:bg-muted/50 transition-colors"
               >
@@ -53,11 +40,11 @@ export function BookedList({ reservations, limit }: BookedListProps) {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-base">
-                        {reservation.rooms.name ??
-                          `Room ${reservation.rooms.id}`}
+                        {reservation.rooms?.name ??
+                          `Room ${reservation.rooms?.id}`}
                       </span>
                     </div>
-                    {reservation.rooms.description && (
+                    {reservation.rooms?.description && (
                       <p className="text-xs text-muted-foreground">
                         {reservation.rooms.description}
                       </p>
