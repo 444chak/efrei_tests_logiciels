@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { RoomReservationsList } from "@/components/roomReservationsList";
 import { RoomDetailsInfo, Room } from "@/components/roomDetailsInfo";
+import { RoomReservationForm } from "@/components/roomReservationForm";
 
 export default function RoomDetailPage() {
   const params = useParams();
@@ -24,13 +25,35 @@ export default function RoomDetailPage() {
     null
   );
 
+  const fetchReservations = () => {
+    if (!id) return;
+    setReservationsLoading(true);
+    fetch(`/api/rooms/reservations/${id}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setReservations(data);
+      })
+      .catch((err) => {
+        setReservationsError(err.message ?? String(err));
+      })
+      .finally(() => {
+        setReservationsLoading(false);
+      });
+  };
+
   useEffect(() => {
     if (!id) return;
 
     let mounted = true;
 
     // Fetch room details
-    const fetchRoom = fetch(`/api/rooms/details/${id}`)
+    fetch(`/api/rooms/details/${id}`)
       .then(async (res) => {
         if (!res.ok) {
           const text = await res.text();
@@ -48,28 +71,13 @@ export default function RoomDetailPage() {
         if (mounted) setLoading(false);
       });
 
-    // Fetch reservations
-    const fetchReservations = fetch(`/api/rooms/reservations/${id}`)
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (mounted) setReservations(data);
-      })
-      .catch((err) => {
-        if (mounted) setReservationsError(err.message ?? String(err));
-      })
-      .finally(() => {
-        if (mounted) setReservationsLoading(false);
-      });
-
     return () => {
       mounted = false;
     };
+  }, [id]);
+
+  useEffect(() => {
+    fetchReservations();
   }, [id]);
 
   if (loading) {
@@ -122,27 +130,45 @@ export default function RoomDetailPage() {
   }
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <div className="mb-6">
+    <div className="container mx-auto p-6 md:p-10 max-w-7xl">
+      <div className="mb-8">
         <Button
           variant="ghost"
           asChild
           className="pl-0 hover:bg-transparent hover:text-primary/80"
         >
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          >
             <ArrowLeft className="h-4 w-4" />
             Retour au tableau de bord
           </Link>
         </Button>
       </div>
 
-      <RoomDetailsInfo room={room} />
-      <br />
-      <RoomReservationsList
-        reservations={reservations}
-        loading={reservationsLoading}
-        error={reservationsError}
-      />
+      <div className="mb-10">
+        <RoomDetailsInfo room={room} />
+      </div>
+
+      <div className="grid lg:grid-cols-12 gap-10 items-start">
+        <div className="lg:col-span-4 xl:col-span-4">
+          <div className="sticky top-6">
+            <RoomReservationForm
+              roomId={room.id}
+              onReservationSuccess={fetchReservations}
+            />
+          </div>
+        </div>
+
+        <div className="lg:col-span-8 xl:col-span-8">
+          <RoomReservationsList
+            reservations={reservations}
+            loading={reservationsLoading}
+            error={reservationsError}
+          />
+        </div>
+      </div>
     </div>
   );
 }
