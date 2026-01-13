@@ -86,10 +86,10 @@ export default function RoomsList() {
             {rooms.map((room) => (
                 <Link
                     key={room.id}
-                    href={`/rooms/details/${encodeURIComponent(String(room.id))}`}
-                    className="block"
+                    href={`/room/detail/${encodeURIComponent(String(room.id))}`}
+                    className="block h-full"
                 >
-                    <Card>
+                    <Card className="h-full">
                         <CardHeader>
                             <CardTitle>{room.name ?? `Room ${room.id}`}</CardTitle>
                         </CardHeader>
