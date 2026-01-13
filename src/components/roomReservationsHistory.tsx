@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 import { User } from "@supabase/supabase-js";
 import { formatDate, formatTime } from "@/lib/utils";
+
 import { Reservation } from "@/types";
 
 interface RoomReservationsListProps {
@@ -49,6 +50,11 @@ export function RoomReservationsHistory({
             {displayedReservations.map((res) => (
               <div
                 key={res.id}
+                className="p-4 border rounded-lg bg-card text-card-foreground shadow-sm"
+              >
+                <p>
+                  <strong>Début:</strong> {formatDate(res.start_time)} •{" "}
+                  {formatTime(res.start_time)}
                 className={`p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors ${
                   res.is_own_reservation
                     ? "bg-primary/5 hover:bg-primary/10"
