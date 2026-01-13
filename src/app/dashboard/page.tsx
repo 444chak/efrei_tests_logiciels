@@ -130,6 +130,8 @@ export default function DashboardPage() {
               reservations={historicReservations}
               loading={historicLoading}
               error={historicError}
+              limit={2}
+              showSeeAllLink={true}
             />
           </div>
 
