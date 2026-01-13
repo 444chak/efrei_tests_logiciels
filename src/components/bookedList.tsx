@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
@@ -11,7 +11,7 @@ type Room = {
     capacite?: number;
 };
 
-type Reservation = {
+export interface Reservation {
     id: number;
     created_at: string;
     start_time: string;
@@ -19,63 +19,11 @@ type Reservation = {
     rooms: Room;
 };
 
-export default function BookedList() {
-    const [reservations, setReservations] = useState<Reservation[] | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+interface BookedListProps {
+    reservations: Reservation[];
+}
 
-    useEffect(() => {
-        let mounted = true;
-
-        fetch("/api/rooms/booked")
-            .then(async (res) => {
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(text || `HTTP ${res.status}`);
-                }
-                return res.json();
-            })
-            .then((data) => {
-                if (mounted) setReservations(data);
-            })
-            .catch((err) => {
-                if (mounted) setError(err.message ?? String(err));
-            })
-            .finally(() => {
-                if (mounted) setLoading(false);
-            });
-
-        return () => {
-            mounted = false;
-        };
-    }, []);
-
-    if (loading) {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Mes Réservations</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-muted-foreground">Chargement des réservations…</p>
-                </CardContent>
-            </Card>
-        );
-    }
-
-    if (error) {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Mes Réservations</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-red-600">Erreur: {error}</p>
-                </CardContent>
-            </Card>
-        );
-    }
-
+export function BookedList({ reservations }: BookedListProps) {
     if (!reservations || reservations.length === 0) {
         return (
             <Card>
