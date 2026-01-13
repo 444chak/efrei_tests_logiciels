@@ -14,7 +14,7 @@ interface RoomDetailsInfoProps {
 
 export function RoomDetailsInfo({ room }: RoomDetailsInfoProps) {
   return (
-    <Card className="max-w-3xl mx-auto">
+    <Card className="max-w-7xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl md:text-3xl">
           {room.name ?? `Salle ${room.id}`}
