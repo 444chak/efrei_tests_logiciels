@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RoomsList from "@/components/roomsList";
+import BookedList from "@/components/bookedList";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -35,9 +36,7 @@ export default async function DashboardPage() {
             <CardHeader>
               <CardTitle>Your Bookings</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">No bookings found.</p>
-            </CardContent>
+            <BookedList />
           </Card>
 
           <div className="md:col-span-2 lg:col-span-3">
