@@ -1,14 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-export interface Reservation {
-  id: number;
-  id_room: number;
-  user_id: string;
-  start_time: string;
-  end_time: string;
-  is_own_reservation: boolean;
-}
+import { formatDate, formatTime } from "@/lib/utils";
+import { Reservation } from "@/types";
 
 interface RoomReservationsListProps {
   reservations: Reservation[];
@@ -61,40 +55,15 @@ export function RoomReservationsList({
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">
-                      {new Date(
-                        res.start_time.endsWith("Z")
-                          ? res.start_time
-                          : res.start_time + "Z"
-                      ).toLocaleDateString("fr-FR", {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      {formatDate(res.start_time)}
                     </span>
                     <span className="text-muted-foreground hidden sm:inline">
                       •
                     </span>
                     <span className="text-muted-foreground">
-                      {new Date(
-                        res.start_time.endsWith("Z")
-                          ? res.start_time
-                          : res.start_time + "Z"
-                      ).toLocaleTimeString("fr-FR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        timeZone: "UTC",
-                      })}
+                      {formatTime(res.start_time)}
                       {" - "}
-                      {new Date(
-                        res.end_time.endsWith("Z")
-                          ? res.end_time
-                          : res.end_time + "Z"
-                      ).toLocaleTimeString("fr-FR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        timeZone: "UTC",
-                      })}
+                      {formatTime(res.end_time)}
                     </span>
                   </div>
                   {res.is_own_reservation && (

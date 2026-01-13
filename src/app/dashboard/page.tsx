@@ -5,24 +5,22 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RoomsList from "@/components/roomsList";
-import { BookedList, Reservation } from "@/components/bookedList";
-import {
-  RoomReservationsHistory,
-  Reservation as HistoricReservation,
-} from "@/components/roomReservationsHistory";
+import { BookedList } from "@/components/bookedList";
+import { Reservation } from "@/types";
+import { RoomReservationsHistory } from "@/components/roomReservationsHistory";
+import { useUserReservations } from "@/hooks/useUserReservations";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const [historicReservations, setHistoricReservations] = useState<
-    HistoricReservation[]
-  >([]);
-  const [historicLoading, setHistoricLoading] = useState(true);
-  const [historicError, setHistoricError] = useState<string | null>(null);
+  const { reservations, loading, error } = useUserReservations("upcoming");
+
+  const {
+    reservations: historicReservations,
+    loading: historicLoading,
+    error: historicError,
+  } = useUserReservations("history");
 
   useEffect(() => {
     let mounted = true;
@@ -42,51 +40,6 @@ export default function DashboardPage() {
     }
 
     checkUser();
-
-    // Reservations futures
-
-    const fetchReservations = fetch("/api/rooms/booked")
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (mounted) setReservations(data);
-      })
-      .catch((err) => {
-        if (mounted) setError(err.message ?? String(err));
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
-
-    // Historic reservations
-    fetch("/api/rooms/booked/historic/")
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (mounted) {
-          // Add is_own_reservation: true to each item as these are the user's own history
-          const formattedData = data.map((item: any) => ({
-            ...item,
-            is_own_reservation: true,
-          }));
-          setHistoricReservations(formattedData);
-        }
-      })
-      .catch((err) => {
-        if (mounted) setHistoricError(err.message ?? String(err));
-      })
-      .finally(() => {
-        if (mounted) setHistoricLoading(false);
-      });
 
     return () => {
       mounted = false;
