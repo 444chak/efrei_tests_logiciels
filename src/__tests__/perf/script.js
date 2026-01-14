@@ -44,7 +44,7 @@ export default function () {
   // 2. Failed Login (Bad Creds)
   group("2. Failed Login", () => {
     const res = http.post(
-      `${BASE_URL}/auth/login`,
+      `${BASE_URL}/api/auth/login`,
       JSON.stringify({ email: user.email, password: "WrongPassword" }),
       params
     );
@@ -55,7 +55,7 @@ export default function () {
   // 3. Successful Login
   group("3. Successful Login", () => {
     const res = http.post(
-      `${BASE_URL}/auth/login`,
+      `${BASE_URL}/api/auth/login`,
       JSON.stringify({ email: user.email, password: user.password || "Password123!" }),
       params
     );
@@ -121,7 +121,7 @@ export default function () {
     // Actually /auth/logout usually clears cookies.
     // We can create a POST request to logout
     // Or simply assume the user finishes session here
-    const res = http.post(`${BASE_URL}/auth/logout`, null, params);
+    const res = http.post(`${BASE_URL}/api/auth/logout`, null, params);
     check(res, { "Logout Success": (r) => r.status === 200 || r.status === 307 }); // 307 redirect
   });
 

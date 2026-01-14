@@ -71,29 +71,35 @@ _(Cela filtre les fichiers contenant "security" dans leur chemin)._
 
 ## 3. Lancer les Tests de Performance
 
-Nous utilisons **k6** pour les tests de charge. Vous devez avoir k6 installé sur votre machine (<https://k6.io/docs/get-started/installation/>).
+Nous utilisons **k6** pour les tests de charge.
 
-Script de test : `perf/load-test.js` (À créer selon la stratégie).
+### Installation de K6
 
-### Exécution
+* **Windows (Winget)** : `winget install k6`
+* **Windows (Choco)** : `choco install k6`
+* **Mac** : `brew install k6`
+* **Linux** : `sudo apt-get install k6` ou via snap
+
+### Exécution du Script
+
+Le script complet (10 scénarios) est situé dans : `src/__tests__/perf/script.js`.
 
 ```bash
-k6 run perf/load-test.js
+k6 run src/__tests__/perf/script.js
 ```
 
-### Exemple de script simple (k6)
+### Scénarios Couverts
 
-Si le fichier n'existe pas encore, créez `perf/load-test.js` :
-
-```javascript
-import http from "k6/http";
-import { sleep } from "k6";
-
-export default function () {
-  http.get("http://localhost:3000/api/rooms/booked");
-  sleep(1);
-}
-```
+1. Chargement Asset Statique.
+2. Login Échoué.
+3. Login Succès.
+4. Accès Dashboard.
+5. Liste des Salles.
+6. Détail Salle.
+7. Liste Réservations.
+8. Création Réservation.
+9. Logout.
+10. Vérification Accès post-logout.
 
 ---
 
@@ -104,5 +110,5 @@ export default function () {
 | **Tous**        | `npm run test`              | Lance Unit, Integration, Security     |
 | **Unitaires**   | `npx vitest src/components` | Lance uniquement les tests composants |
 | **Sécurité**    | `npx vitest security`       | Lance les scénarios d'attaque         |
-| **Performance** | `k6 run perf/script.js`     | Lance le test de charge (requiert k6) |
+| **Performance** | `k6 run src/__tests__/perf/script.js` | Lance le test de charge (requiert k6) |
 | **Couverture**  | `npm run coverage`          | Affiche le % de code couvert          |
