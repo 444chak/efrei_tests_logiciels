@@ -3,6 +3,7 @@ import { GET as getRooms } from "@/app/api/rooms/route";
 import { DELETE as deleteReservation } from "@/app/api/reservations/[id]/route";
 import { POST as createReservation } from "@/app/api/rooms/reservations/[id]/route";
 import { NextRequest, NextResponse } from "next/server";
+import { createMockRoom } from "@/test/fixtures";
 
 // Mock Supabase
 const mockSupabase = {
@@ -28,7 +29,9 @@ describe("API Integration Tests", () => {
 
   describe("GET /api/rooms", () => {
     it("should return a list of rooms (200)", async () => {
-      const mockRooms = [{ id: 1, name: "Room A", capacite: 10 }];
+      const mockRooms = [
+        createMockRoom({ id: 1, name: "Room A", capacite: 10 }),
+      ];
       mockSupabase.from.mockReturnValue({
         select: vi.fn().mockResolvedValue({ data: mockRooms, error: null }),
       });

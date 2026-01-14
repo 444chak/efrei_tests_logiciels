@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import RoomsList from "@/components/RoomsList";
+import { createMockRoom, mockRoomWithoutName } from "@/test/fixtures";
 
 global.fetch = vi.fn();
 
@@ -17,7 +18,12 @@ describe("RoomsList", () => {
 
   it("renders rooms after successful fetch", async () => {
     const mockRooms = [
-      { id: 1, name: "Room 1", description: "Desc 1", capacite: 5 },
+      createMockRoom({
+        id: 1,
+        name: "Room 1",
+        description: "Desc 1",
+        capacite: 5,
+      }),
     ];
 
     (global.fetch as any).mockResolvedValue({
@@ -76,9 +82,7 @@ describe("RoomsList", () => {
   });
 
   it("renders room fallback title when name is missing", async () => {
-    const mockRooms = [
-      { id: 123, name: null, description: "Desc", capacite: 5 },
-    ];
+    const mockRooms = [mockRoomWithoutName];
 
     (global.fetch as any).mockResolvedValue({
       ok: true,

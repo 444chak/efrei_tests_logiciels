@@ -5,6 +5,7 @@ import { RoomReservationForm } from "@/components/RoomReservationForm";
 import { BookedList } from "@/components/BookedList";
 import { toast } from "sonner";
 import userEvent from "@testing-library/user-event";
+import { mockReservation } from "@/test/fixtures";
 
 // Mock dependencies
 vi.mock("next/navigation", () => ({
@@ -43,7 +44,9 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
 
       const emailInput = screen.getByLabelText(/email/i);
       const passwordInput = screen.getByLabelText(/mot de passe/i);
-      const submitButton = screen.getByRole("button", { name: /se connecter/i });
+      const submitButton = screen.getByRole("button", {
+        name: /se connecter/i,
+      });
 
       await userEvent.type(emailInput, "test@example.com");
       await userEvent.type(passwordInput, "password123");
@@ -95,15 +98,7 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
         json: async () => ({ success: true }),
       });
 
-      const reservations = [
-        {
-          id: 123,
-          user_id: "u1",
-          start_time: new Date().toISOString(),
-          end_time: new Date().toISOString(),
-          rooms: { name: "Room A", id: 1 },
-        },
-      ];
+      const reservations = [{ ...mockReservation, id: 123 }];
 
       render(<BookedList reservations={reservations} />);
 

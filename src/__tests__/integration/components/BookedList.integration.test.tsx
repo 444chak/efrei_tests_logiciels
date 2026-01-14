@@ -2,7 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BookedList } from "@/components/BookedList";
 import { Reservation } from "@/types";
-import { mockUseRouter, mockToast, mockRouter } from "@/test/mocks";
+import {
+  mockUseRouter,
+  mockToast,
+  mockRouter,
+  resetMockRouter,
+} from "@/test/mocks";
 
 vi.mock("next/navigation", async () => {
   const mocks = await import("@/test/mocks");
@@ -43,7 +48,7 @@ describe("BookedList", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockRouter.refresh.mockClear();
+    resetMockRouter();
 
     global.fetch = vi.fn();
   });

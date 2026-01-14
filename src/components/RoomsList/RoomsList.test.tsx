@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import RoomsList from "./index";
+import { createMockRoom, mockRoomWithoutName } from "@/test/fixtures";
 
 // Mock fetch to return immediately with mock data (no network call)
 // This allows the component to render in its "loaded" state
@@ -53,8 +54,18 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
 
   it("should render rooms when data is provided", async () => {
     const mockRooms = [
-      { id: 1, name: "Room A", description: "Description A", capacite: 10 },
-      { id: 2, name: "Room B", description: "Description B", capacite: 20 },
+      createMockRoom({
+        id: 1,
+        name: "Room A",
+        description: "Description A",
+        capacite: 10,
+      }),
+      createMockRoom({
+        id: 2,
+        name: "Room B",
+        description: "Description B",
+        capacite: 20,
+      }),
     ];
 
     (global.fetch as any).mockResolvedValue({
@@ -88,9 +99,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
   });
 
   it("should render room with fallback name when name is missing", async () => {
-    const mockRooms = [
-      { id: 123, name: null, description: "Test", capacite: 5 },
-    ];
+    const mockRooms = [mockRoomWithoutName];
 
     (global.fetch as any).mockResolvedValue({
       ok: true,
