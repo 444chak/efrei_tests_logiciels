@@ -21,7 +21,13 @@ vi.mock("sonner", () => ({
 
 // Mock ReservationsList to isolate BookedList
 vi.mock("../ReservationsList", () => ({
-  ReservationsList: ({ reservations, title }: any) => (
+  ReservationsList: ({
+    reservations,
+    title,
+  }: {
+    reservations: Array<{ id: number }>;
+    title?: string;
+  }) => (
     <div data-testid="reservations-list">
       <h2>{title}</h2>
       <div data-testid="reservations-count">{reservations.length}</div>

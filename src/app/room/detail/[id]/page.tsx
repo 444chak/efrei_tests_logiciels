@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { ArrowLeft } from "lucide-react";
 import { RoomReservationsList } from "@/components/RoomReservationsList";
 import { RoomDetailsInfo, Room } from "@/components/RoomDetailsInfo";
 import { RoomReservationForm } from "@/components/RoomReservationForm";
+import { Reservation } from "@/types";
 
 export default function RoomDetailPage() {
   const params = useParams();
@@ -19,33 +20,11 @@ export default function RoomDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [reservations, setReservations] = useState<any[]>([]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [reservationsLoading, setReservationsLoading] = useState(true);
   const [reservationsError, setReservationsError] = useState<string | null>(
     null
   );
-
-  const fetchReservations = () => {
-    if (!id) return;
-    setReservationsLoading(true);
-    fetch(`/api/rooms/reservations/${id}`)
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(text || `HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setReservations(data);
-      })
-      .catch((err) => {
-        setReservationsError(err.message ?? String(err));
-      })
-      .finally(() => {
-        setReservationsLoading(false);
-      });
-  };
 
   useEffect(() => {
     if (!id) return;
@@ -76,7 +55,39 @@ export default function RoomDetailPage() {
   }, [id]);
 
   useEffect(() => {
+    if (!id) return;
+
+    let mounted = true;
+
+    async function fetchReservations() {
+      setReservationsLoading(true);
+      try {
+        const res = await fetch(`/api/rooms/reservations/${id}`);
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        if (mounted) {
+          setReservations(data);
+        }
+      } catch (err) {
+        if (mounted) {
+          const error = err instanceof Error ? err : new Error(String(err));
+          setReservationsError(error.message);
+        }
+      } finally {
+        if (mounted) {
+          setReservationsLoading(false);
+        }
+      }
+    }
+
     fetchReservations();
+
+    return () => {
+      mounted = false;
+    };
   }, [id]);
 
   if (loading) {
@@ -155,7 +166,24 @@ export default function RoomDetailPage() {
           <div className="sticky top-6">
             <RoomReservationForm
               roomId={room.id}
-              onReservationSuccess={fetchReservations}
+              onReservationSuccess={async () => {
+                if (!id) return;
+                setReservationsLoading(true);
+                try {
+                  const res = await fetch(`/api/rooms/reservations/${id}`);
+                  if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text || `HTTP ${res.status}`);
+                  }
+                  const data = await res.json();
+                  setReservations(data);
+                } catch (err) {
+                  const error = err instanceof Error ? err : new Error(String(err));
+                  setReservationsError(error.message);
+                } finally {
+                  setReservationsLoading(false);
+                }
+              }}
             />
           </div>
         </div>

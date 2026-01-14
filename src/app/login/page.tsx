@@ -119,9 +119,9 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex justify-center">
           <div className="text-sm text-muted-foreground">
-            Vous n'avez pas de compte ?{" "}
+            Vous n&apos;avez pas de compte ?{" "}
             <Link href="/signup" className="text-primary hover:underline">
-              S'inscrire
+              S&apos;inscrire
             </Link>
           </div>
         </CardFooter>

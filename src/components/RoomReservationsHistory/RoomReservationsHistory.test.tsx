@@ -5,7 +5,13 @@ import { mockReservation } from "@/test/fixtures";
 
 // Mock ReservationsList to verify props passed to it
 vi.mock("../ReservationsList", () => ({
-  ReservationsList: (props: any) => (
+  ReservationsList: (props: {
+    title?: string;
+    emptyMessage?: string;
+    showRoomName?: boolean;
+    className?: string;
+    footerAction?: { href: string; label: string };
+  }) => (
     <div data-testid="reservations-list">
       <span>Title: {props.title}</span>
       <span>EmptyMsg: {props.emptyMessage}</span>

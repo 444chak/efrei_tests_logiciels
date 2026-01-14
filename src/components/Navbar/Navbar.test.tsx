@@ -8,7 +8,7 @@ import {
 } from "@testing-library/react";
 import Navbar from "./index";
 
-import { mockAuth, mockSupabase, resetSupabaseMocks } from "@/test/mocks";
+import { mockAuth, resetSupabaseMocks } from "@/test/mocks";
 
 vi.mock("@/lib/supabase/client", async () => {
   const mocks = await import("@/test/mocks");
@@ -28,8 +28,8 @@ class ResizeObserverMock {
 
 describe("Navbar", () => {
   beforeAll(() => {
-    // Cast to any to avoid TS issues with global assignment
-    global.ResizeObserver = ResizeObserverMock as any;
+    // Cast to avoid TS issues with global assignment
+    global.ResizeObserver = ResizeObserverMock as typeof ResizeObserver;
   });
 
   beforeEach(() => {
@@ -113,7 +113,7 @@ describe("Navbar", () => {
   });
 
   it("renders email initial fallback when username missing", () => {
-    const userNoName: any = {
+    const userNoName = {
       ...mockUser,
       user_metadata: {},
       email: "alpha@example.com",
@@ -123,7 +123,7 @@ describe("Navbar", () => {
   });
 
   it("renders default user icon when no username or email", () => {
-    const userEmpty: any = {
+    const userEmpty = {
       ...mockUser,
       user_metadata: {},
       email: "",

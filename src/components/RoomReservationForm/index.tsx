@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
@@ -57,8 +57,10 @@ export function RoomReservationForm({
 
       toast.success("Réservation effectuée avec succès !");
       onReservationSuccess();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Erreur lors de la réservation";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }

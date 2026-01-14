@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { RoomReservationForm } from "@/components/RoomReservationForm";
-import { toast } from "sonner";
 
 import { mockToast } from "@/test/mocks";
 
@@ -14,7 +13,15 @@ vi.mock("sonner", async () => {
 
 vi.mock("@/components/ui/calendar", () => {
   return {
-    Calendar: ({ onSelect, selected, disabled }: any) => (
+    Calendar: ({
+      onSelect,
+      selected,
+      disabled,
+    }: {
+      onSelect?: (date: Date | undefined) => void;
+      selected?: Date;
+      disabled?: (date: Date) => boolean;
+    }) => (
       <div data-testid="mock-calendar">
         <span data-testid="selected-date">
           {selected ? selected.toString() : "No Date"}
@@ -67,7 +74,7 @@ describe("RoomReservationForm", () => {
 
   it("handles successful reservation", async () => {
     const onSuccess = vi.fn();
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ success: true }),
     });
@@ -96,7 +103,7 @@ describe("RoomReservationForm", () => {
   });
 
   it("handles API error", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,
       json: async () => ({ error: "Créneau indisponible" }),
     });
@@ -112,7 +119,7 @@ describe("RoomReservationForm", () => {
   });
 
   it("handles API error with default message", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,
       json: async () => ({}),
     });
@@ -130,7 +137,9 @@ describe("RoomReservationForm", () => {
   });
 
   it("handles network error", async () => {
-    (global.fetch as any).mockRejectedValueOnce(new Error("Network Error"));
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new Error("Network Error")
+    );
 
     render(<RoomReservationForm roomId={1} onReservationSuccess={() => {}} />);
 
@@ -142,7 +151,7 @@ describe("RoomReservationForm", () => {
     });
   });
   it("includes selected time and duration in reservation", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ success: true }),
     });

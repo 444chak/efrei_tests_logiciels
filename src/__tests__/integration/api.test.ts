@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET as getRooms } from "@/app/api/rooms/route";
 import { DELETE as deleteReservation } from "@/app/api/reservations/[id]/route";
 import { POST as createReservation } from "@/app/api/rooms/reservations/[id]/route";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { createMockRoom } from "@/test/fixtures";
 
 // Mock Supabase
@@ -83,11 +83,6 @@ describe("API Integration Tests", () => {
     });
 
     it("should fail if reservation not found (404)", async () => {
-      // Silence console.error as we expect it
-      const consoleSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-
       // Mock user
       mockSupabase.auth.getUser.mockResolvedValue({
         data: { user: { id: "user-123" } },
@@ -109,14 +104,8 @@ describe("API Integration Tests", () => {
       const res = await deleteReservation(req, { params });
 
       expect(res.status).toBe(404);
-
-      // Verify expected log matches app logic
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "No reservation found for ID:",
-        "999"
-      );
-
-      consoleSpy.mockRestore();
+      const json = await res.json();
+      expect(json.error).toBe("Reservation not found");
     });
   });
 

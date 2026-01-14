@@ -107,7 +107,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
               <Link href="/login">Connexion</Link>
             </Button>
             <Button asChild>
-              <Link href="/signup">S'inscrire</Link>
+              <Link href="/signup">S&apos;inscrire</Link>
             </Button>
           </div>
         )}

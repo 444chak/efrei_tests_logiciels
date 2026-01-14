@@ -37,7 +37,7 @@ async function main() {
     console.log(`👤 Creating user ${email}`);
 
     // 1️⃣ Create user (bypass email confirmation)
-    const { data: createData, error: createError } =
+    const { error: createError } =
       await adminSupabase.auth.admin.createUser({
         email,
         password: PASSWORD,

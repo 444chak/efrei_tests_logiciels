@@ -1,4 +1,3 @@
-import React from "react";
 import { Reservation } from "@/types";
 import { ReservationsList } from "../ReservationsList";
 

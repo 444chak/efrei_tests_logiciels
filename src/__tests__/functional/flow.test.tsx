@@ -38,7 +38,7 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
 
   describe("Login Flow", () => {
     it("should redirect to dashboard on successful login", async () => {
-      (login as any).mockResolvedValue({ success: true });
+      vi.mocked(login).mockResolvedValue({ success: true });
 
       render(<LoginPage />);
 
@@ -62,7 +62,7 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
   describe("Booking Flow", () => {
     it("should allow a user to book a room", async () => {
       // Mock fetch response for booking
-      (global.fetch as any).mockResolvedValue({
+      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
         json: async () => ({ success: true }),
       });
@@ -93,7 +93,7 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
   describe("Cancel Flow", () => {
     it("should allow a user to cancel a reservation", async () => {
       // Mock fetch for delete
-      (global.fetch as any).mockResolvedValue({
+      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
         ok: true,
         json: async () => ({ success: true }),
       });
@@ -148,7 +148,9 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
   describe("Error Handling", () => {
     it("should show error toast on network failure", async () => {
       // Mock fetch failure
-      (global.fetch as any).mockRejectedValue(new Error("Network Error"));
+      (global.fetch as unknown as ReturnType<typeof vi.fn>).mockRejectedValue(
+        new Error("Network Error")
+      );
 
       const onSuccess = vi.fn();
       render(

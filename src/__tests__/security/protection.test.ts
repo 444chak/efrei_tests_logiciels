@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { DELETE } from "@/app/api/reservations/[id]/route";
 import { POST } from "@/app/api/rooms/reservations/[id]/route";
 import { GET } from "@/app/api/rooms/route";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 // Mocks
 const mockGetUser = vi.fn();

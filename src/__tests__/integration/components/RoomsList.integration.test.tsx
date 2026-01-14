@@ -11,7 +11,9 @@ describe("RoomsList", () => {
   });
 
   it("renders loading initially", () => {
-    (global.fetch as any).mockImplementation(() => new Promise(() => {}));
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      () => new Promise(() => {})
+    );
     render(<RoomsList />);
     expect(screen.getByText("Chargement des rooms…")).toBeInTheDocument();
   });
@@ -26,7 +28,7 @@ describe("RoomsList", () => {
       }),
     ];
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => mockRooms,
     });
@@ -40,7 +42,7 @@ describe("RoomsList", () => {
   });
 
   it("renders error state on fetch failure", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: false,
       status: 500,
       text: async () => "Internal Server Error",
@@ -55,7 +57,7 @@ describe("RoomsList", () => {
     });
   });
   it("renders empty state when no rooms found", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => [],
     });
@@ -68,7 +70,7 @@ describe("RoomsList", () => {
   });
 
   it("renders error state on fetch failure with no text", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: false,
       status: 404,
       text: async () => "",
@@ -84,7 +86,7 @@ describe("RoomsList", () => {
   it("renders room fallback title when name is missing", async () => {
     const mockRooms = [mockRoomWithoutName];
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => mockRooms,
     });
@@ -96,8 +98,8 @@ describe("RoomsList", () => {
     });
   });
   it("does not update state if unmounted during fetch", async () => {
-    let resolveFetch: any;
-    (global.fetch as any).mockReturnValue(
+    let resolveFetch: (value: unknown) => void;
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
       new Promise((resolve) => {
         resolveFetch = resolve;
       })
@@ -116,8 +118,8 @@ describe("RoomsList", () => {
   });
 
   it("does not update error state if unmounted during fetch error", async () => {
-    let rejectFetch: any;
-    (global.fetch as any).mockReturnValue(
+    let rejectFetch: (reason?: unknown) => void;
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
       new Promise((_, reject) => {
         rejectFetch = reject;
       })
@@ -133,7 +135,9 @@ describe("RoomsList", () => {
   });
 
   it("renders error state when fetch rejects with a string (non-Error object)", async () => {
-    (global.fetch as any).mockRejectedValue("Simple String Error");
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockRejectedValue(
+      "Simple String Error"
+    );
 
     render(<RoomsList />);
 

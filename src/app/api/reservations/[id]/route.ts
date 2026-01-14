@@ -23,12 +23,6 @@ export async function DELETE(
     .eq("id", id)
     .single();
 
-  if (fetchError) {
-    console.error("Fetch Error:", fetchError);
-  }
-  if (!reservation) {
-    console.error("No reservation found for ID:", id);
-  }
   if (fetchError || !reservation) {
     return NextResponse.json(
       { error: "Reservation not found" },

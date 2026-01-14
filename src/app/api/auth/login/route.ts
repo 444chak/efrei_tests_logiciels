@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
       { success: true, session: data.session },
       { status: 200 }
     );
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    const error = e instanceof Error ? e : new Error(String(e));
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

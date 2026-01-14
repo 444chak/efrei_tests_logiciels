@@ -33,19 +33,19 @@ export const mockToast = {
 // --- Mock Supabase ---
 const mockSignOut = vi.fn();
 const mockUnsubscribe = vi.fn();
-let authStateChangeCallback: ((event: string, session: any) => void) | null =
-  null;
+type AuthStateChangeCallback = (event: string, session: unknown) => void;
+let authStateChangeCallback: AuthStateChangeCallback | null = null;
 
 export const mockAuth = {
   signOut: mockSignOut,
-  onAuthStateChange: vi.fn((cb) => {
+  onAuthStateChange: vi.fn((cb: AuthStateChangeCallback) => {
     authStateChangeCallback = cb;
     return {
       data: { subscription: { unsubscribe: mockUnsubscribe } },
     };
   }),
   // Helper to trigger state changes in tests
-  triggerAuthStateChange: (event: string, session: any) => {
+  triggerAuthStateChange: (event: string, session: unknown) => {
     if (authStateChangeCallback) {
       authStateChangeCallback(event, session);
     }

@@ -1,9 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ReservationsList } from "./index";
-import { Reservation } from "@/types";
 import { mockReservation } from "@/test/fixtures";
-import React from "react";
 
 describe("ReservationsList", () => {
   it("displays loading state", () => {
@@ -136,7 +134,7 @@ describe("ReservationsList", () => {
   });
 
   it("renders room name fallback when details are missing", () => {
-    const fallbackReservation: any = {
+    const fallbackReservation = {
       ...mockReservation,
       rooms: null,
       id_room: 999,
@@ -162,7 +160,7 @@ describe("ReservationsList", () => {
   });
 
   it("renders room name fallback INSIDE interactive link", () => {
-    const fallbackInLinkRes: any = {
+    const fallbackInLinkRes = {
       ...mockReservation,
       rooms: { ...mockReservation.rooms, name: null },
       id_room: 777,

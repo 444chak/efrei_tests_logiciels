@@ -87,9 +87,7 @@ export default function () {
   });
 
   // 8. Create Reservation
-  let reservationId = null;
   group("8. Create Reservation", () => {
-    const uniqueOffset = exec.vu.idInTest * 1000 + exec.scenario.iterationInTest;
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 1); // Tomorrow
     // Simple offset to avoid collision: + VU * hour
@@ -104,7 +102,7 @@ export default function () {
     const res = http.post(`${BASE_URL}/api/rooms/reservations/${ROOM_ID}`, JSON.stringify(payload), params);
 
     // We accept 201 (Success) or 409 (Conflict - acceptable in load test)
-    const success = check(res, {
+    check(res, {
       "Create Status OK": (r) => r.status === 201 || r.status === 409
     });
 

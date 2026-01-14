@@ -23,7 +23,7 @@ export function useUserReservations(filter: ReservationFilter = "upcoming") {
         }
         const data = await res.json();
 
-        const formattedData = data.map((item: any) => ({
+        const formattedData = (data as Reservation[]).map((item) => ({
           ...item,
           is_own_reservation: true,
         }));
@@ -32,9 +32,11 @@ export function useUserReservations(filter: ReservationFilter = "upcoming") {
           setReservations(formattedData);
           setError(null);
         }
-      } catch (err: any) {
+      } catch (err) {
         if (mounted) {
-          setError(err.message ?? String(err));
+          const errorMessage =
+            err instanceof Error ? err.message : String(err);
+          setError(errorMessage);
         }
       } finally {
         if (mounted) {

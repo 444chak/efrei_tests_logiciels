@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 
@@ -95,7 +94,7 @@ export default async function Home() {
         </p>
         <nav className="flex gap-4 sm:ml-auto sm:gap-6">
           <Link className="text-xs underline-offset-4 hover:underline" href="#">
-            Conditions d'utilisation
+            Conditions d&apos;utilisation
           </Link>
           <Link className="text-xs underline-offset-4 hover:underline" href="#">
             Confidentialité

@@ -1,9 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BookedList } from "@/components/BookedList";
-import { Reservation } from "@/types";
 import {
-  mockUseRouter,
   mockToast,
   mockRouter,
   resetMockRouter,
@@ -26,9 +24,15 @@ vi.mock("sonner", async () => {
 import { mockReservation } from "@/test/fixtures";
 
 vi.mock("@/components/ReservationsList", () => ({
-  ReservationsList: ({ onCancel, reservations }: any) => (
+  ReservationsList: ({
+    onCancel,
+    reservations,
+  }: {
+    onCancel?: (id: number) => void;
+    reservations: Array<{ id: number; rooms?: { name?: string } }>;
+  }) => (
     <div data-testid="reservations-list">
-      {reservations.map((res: any) => (
+      {reservations.map((res) => (
         <div key={res.id}>
           <span>{res.rooms?.name}</span>
           <button
@@ -75,7 +79,7 @@ describe("BookedList", () => {
   });
 
   it("handles successful cancellation", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: true,
     });
 
@@ -111,7 +115,7 @@ describe("BookedList", () => {
     const consoleErrorMock = vi.fn();
     console.error = consoleErrorMock;
 
-    (global.fetch as any).mockResolvedValueOnce({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,
     });
 

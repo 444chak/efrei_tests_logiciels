@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/popover";
 
 export function Calendar24() {
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   return (
     <div className="flex gap-4">

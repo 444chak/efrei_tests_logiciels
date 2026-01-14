@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import RoomsList from "@/components/RoomsList";
 import { BookedList } from "@/components/BookedList";
-import { Reservation } from "@/types";
 import { RoomReservationsHistory } from "@/components/RoomReservationsHistory";
 import { useUserReservations } from "@/hooks/useUserReservations";
+import { User } from "@supabase/supabase-js";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const { reservations, loading, error, refresh } =
     useUserReservations("upcoming");

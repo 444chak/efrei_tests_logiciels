@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { RoomReservationsHistory } from "@/components/RoomReservationsHistory";
@@ -8,10 +8,11 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useUserReservations } from "@/hooks/useUserReservations";
+import { User } from "@supabase/supabase-js";
 
 export default function HistoryPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     let mounted = true;

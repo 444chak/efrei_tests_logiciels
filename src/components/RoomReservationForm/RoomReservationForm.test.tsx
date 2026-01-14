@@ -12,7 +12,13 @@ vi.mock("sonner", () => ({
 
 // Mock Calendar component to avoid complex UI dependency
 vi.mock("@/components/ui/calendar", () => ({
-  Calendar: ({ selected, onSelect }: any) => (
+  Calendar: ({
+    selected,
+    onSelect,
+  }: {
+    selected?: Date;
+    onSelect?: (date: Date | undefined) => void;
+  }) => (
     <div data-testid="mock-calendar">
       <span data-testid="selected-date">
         {selected ? selected.toISOString() : "No date selected"}

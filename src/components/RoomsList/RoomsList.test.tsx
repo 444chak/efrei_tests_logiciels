@@ -12,7 +12,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
     vi.clearAllMocks();
     // Mock fetch to resolve immediately with empty array
     // This simulates the component in a "loaded" state without network delay
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => [],
     });
@@ -31,7 +31,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
 
   it("should render loading state initially", () => {
     // Mock fetch to never resolve (simulating loading)
-    (global.fetch as any).mockImplementation(
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
       () => new Promise(() => {}) // Never resolves
     );
 
@@ -40,7 +40,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
   });
 
   it("should render empty state when no rooms", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => [],
     });
@@ -68,7 +68,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
       }),
     ];
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => mockRooms,
     });
@@ -86,7 +86,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
   });
 
   it("should render error state when fetch fails", async () => {
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: false,
       status: 500,
       text: async () => "Internal Server Error",
@@ -101,7 +101,7 @@ describe("RoomsList - Unit Test (Smoke Test)", () => {
   it("should render room with fallback name when name is missing", async () => {
     const mockRooms = [mockRoomWithoutName];
 
-    (global.fetch as any).mockResolvedValue({
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
       ok: true,
       json: async () => mockRooms,
     });
