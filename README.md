@@ -138,7 +138,7 @@ Cette section présente l'architecture de tests conforme aux **standards ISTQB**
 
 **Principe ISTQB** : Validation des scénarios métier et des parcours utilisateur (Black Box).
 
-#### 3. 🔒 Tests de Sécurité
+#### 4. 🔒 Tests de Sécurité
 
 **Localisation** : `src/__tests__/security/protection.test.ts`
 
@@ -162,7 +162,7 @@ Cette section présente l'architecture de tests conforme aux **standards ISTQB**
 9. Rejet dates passées → 400
 10. Prévention double booking → 409
 
-#### 4. ⚡ Tests de Performance
+#### 5. ⚡ Tests de Performance
 
 **Localisation** : `src/__tests__/perf/script.js`
 
@@ -234,7 +234,7 @@ L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 # Lancer tous les tests (Unitaires + Intégration + Sécurité)
 npm run test
 
-# Mode watch (développement continu)
+# Mode watch (développement continu) - lance tous les tests
 npx vitest
 
 # Tests unitaires uniquement (composants colocalisés)
@@ -322,10 +322,11 @@ efrei_tests_logiciels/
 │   │   ├── integration/        # Tests d'intégration technique (White Box)
 │   │   │   ├── api.test.ts
 │   │   │   └── components/      # Tests d'intégration des composants
+│   │   │       ├── BookedList.integration.test.tsx
+│   │   │       ├── RoomReservationForm.integration.test.tsx
+│   │   │       └── RoomsList.integration.test.tsx
 │   │   ├── functional/          # Tests fonctionnels métier (Black Box)
 │   │   │   └── flow.test.tsx
-│   │   │       ├── BookedList.integration.test.tsx
-│   │   │       └── ...
 │   │   ├── security/           # Tests de sécurité
 │   │   │   └── protection.test.ts
 │   │   └── perf/               # Tests de performance
@@ -340,10 +341,9 @@ efrei_tests_logiciels/
 │
 ├── docs/                        # Documentation QA
 │   ├── TEST_PLAN.md
-│   ├── TEST_STRATEGY.md
-│   ├── AUDIT_ARCHITECTURE_TESTS.md
 │   ├── QUALITY_REPORT.md
-│   └── RUN_TESTS.md
+│   ├── RUN_TESTS.md
+│   └── API_TESTING.md
 │
 ├── scripts/                     # Scripts utilitaires
 │   └── generateTestUser.js
@@ -393,9 +393,42 @@ Pour plus de détails, consultez le [Rapport d'Audit Architecture](./docs/AUDIT_
 
 ---
 
+## 🔄 CI/CD & GitHub Actions
+
+Le projet utilise **GitHub Actions** pour automatiser les tests et la qualité du code.
+
+### Workflows Disponibles
+
+#### 1. CI Pipeline (`.github/workflows/ci.yml`)
+
+**Déclenchement** : À chaque push ou pull request sur la branche `master`
+
+**Jobs** :
+
+- ✅ **Linting** : Vérification ESLint
+- ✅ **Type Checking** : Vérification TypeScript
+- ✅ **Testing** : Exécution de tous les tests avec couverture de code
+- ✅ **Codecov** : Upload de la couverture vers Codecov
+
+#### 2. Nightly Tests (`.github/workflows/nightly.yml`)
+
+**Déclenchement** :
+
+- 🔄 **Automatique** : Tous les jours à 2h du matin UTC (cron)
+- 🔧 **Manuel** : Via `workflow_dispatch` dans l'interface GitHub Actions
+
+**Jobs** :
+
+- ✅ **Security Tests** : Exécution des tests de sécurité (10 scénarios OWASP)
+- ✅ **Performance Tests** : Tests de charge avec K6 (10 scénarios)
+
+**Note** : Les tests de performance nécessitent un serveur Next.js en cours d'exécution, qui est démarré automatiquement dans le workflow.
+
+---
+
 ## 👤 Auteur
 
-Groupe 11 (à compléter)
+Groupe 11
 
 ---
 

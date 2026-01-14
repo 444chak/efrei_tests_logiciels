@@ -46,10 +46,9 @@ npx vitest Navbar
 
 Pour générer un rapport de couverture :
 
-````bash
 ```bash
 npm run coverage
-````
+```
 
 _Le rapport sera généré dans le dossier `coverage/`._
 

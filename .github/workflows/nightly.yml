@@ -3,6 +3,8 @@ name: Nightly Tests (Non-Functional)
 on:
   workflow_dispatch:
     description: "Lancer les tests non-fonctionnels (Sécurité & Performance)"
+  schedule:
+    - cron: "0 2 * * *"
 
 permissions:
   contents: read
