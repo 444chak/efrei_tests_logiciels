@@ -28,7 +28,7 @@ vi.mock("@/app/auth/actions", () => ({
 
 import { login } from "@/app/auth/actions";
 
-describe("Frontend Flow Integration Tests", () => {
+describe("Functional Tests - User Scenarios (Black Box)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Helper to mock fetch
@@ -132,8 +132,7 @@ describe("Frontend Flow Integration Tests", () => {
 
   describe("Date Navigation", () => {
     it("should update date state when calendar is used", async () => {
-      // This is a unit test for the component's internal state really,
-      // but integration in sense of UI interaction.
+      // This is a functional test validating user interaction with the form
       const onSuccess = vi.fn();
       render(
         <RoomReservationForm roomId={1} onReservationSuccess={onSuccess} />

@@ -105,10 +105,10 @@ k6 run src/__tests__/perf/script.js
 
 ## Résumé des Commandes
 
-| Type de Test    | Commande                    | Description                           |
-| --------------- | --------------------------- | ------------------------------------- |
-| **Tous**        | `npm run test`              | Lance Unit, Integration, Security     |
-| **Unitaires**   | `npx vitest src/components` | Lance uniquement les tests composants |
-| **Sécurité**    | `npx vitest security`       | Lance les scénarios d'attaque         |
+| Type de Test    | Commande                              | Description                           |
+| --------------- | ------------------------------------- | ------------------------------------- |
+| **Tous**        | `npm run test`                        | Lance Unit, Integration, Security     |
+| **Unitaires**   | `npx vitest src/components`           | Lance uniquement les tests composants |
+| **Sécurité**    | `npx vitest security`                 | Lance les scénarios d'attaque         |
 | **Performance** | `k6 run src/__tests__/perf/script.js` | Lance le test de charge (requiert k6) |
-| **Couverture**  | `npm run coverage`          | Affiche le % de code couvert          |
+| **Couverture**  | `npm run coverage`                    | Affiche le % de code couvert          |
