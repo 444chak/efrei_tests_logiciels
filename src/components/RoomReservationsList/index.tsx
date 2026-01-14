@@ -1,6 +1,6 @@
 import React from "react";
 import { Reservation } from "@/types";
-import { ReservationsList } from "./reservations-list";
+import { ReservationsList } from "../ReservationsList";
 
 interface RoomReservationsListProps {
   reservations: Reservation[];

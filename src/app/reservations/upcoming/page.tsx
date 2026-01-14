@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BookedList } from "@/components/bookedList";
+import { BookedList } from "@/components/BookedList";
 import { useUserReservations } from "@/hooks/useUserReservations";
 
 export default function UpcomingReservationsPage() {

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { RoomReservationsHistory } from "@/components/roomReservationsHistory";
+import { RoomReservationsHistory } from "@/components/RoomReservationsHistory";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
