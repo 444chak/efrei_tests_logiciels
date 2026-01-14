@@ -29,12 +29,12 @@ export default function UpcomingReservationsPage() {
 
         {loading ? (
           <div className="flex justify-center py-12">
-            <p className="text-muted-foreground animate-pulse">
+            <p className="animate-pulse text-muted-foreground">
               Chargement des réservations...
             </p>
           </div>
         ) : error ? (
-          <div className="p-6 bg-red-50 text-red-600 rounded-lg border border-red-100">
+          <div className="rounded-lg border border-red-100 bg-red-50 p-6 text-red-600">
             Erreur: {error}
           </div>
         ) : (

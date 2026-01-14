@@ -54,18 +54,18 @@ export function ReservationsList({
       <CardContent>
         {loading && (
           <div className="flex justify-center py-8">
-            <p className="text-muted-foreground animate-pulse">Chargement...</p>
+            <p className="animate-pulse text-muted-foreground">Chargement...</p>
           </div>
         )}
 
         {error && (
-          <div className="p-4 bg-red-50 text-red-600 rounded-md text-sm border border-red-100">
+          <div className="rounded-md border border-red-100 bg-red-50 p-4 text-sm text-red-600">
             Erreur: {error}
           </div>
         )}
 
         {!loading && !error && reservations.length === 0 && (
-          <div className="text-center py-10 text-muted-foreground bg-muted/20 rounded-lg">
+          <div className="rounded-lg bg-muted/20 py-10 text-center text-muted-foreground">
             <p>{emptyMessage}</p>
           </div>
         )}
@@ -76,11 +76,11 @@ export function ReservationsList({
               const isInteractive = !!onCancel;
 
               const content = (
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                   <div className="space-y-1">
                     {showRoomName && (
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-base">
+                        <span className="text-base font-semibold">
                           {linkToRoom && isInteractive && res.rooms?.id ? (
                             <Link
                               href={`/room/detail/${encodeURIComponent(
@@ -98,7 +98,7 @@ export function ReservationsList({
                     )}
 
                     {showDescription && res.rooms?.description && (
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {res.rooms.description}
                       </p>
                     )}
@@ -120,7 +120,7 @@ export function ReservationsList({
                     </div>
 
                     {showStatus && res.is_own_reservation && (
-                      <p className="text-xs text-primary font-medium">
+                      <p className="text-xs font-medium text-primary">
                         ✨ Votre réservation
                       </p>
                     )}
@@ -135,7 +135,7 @@ export function ReservationsList({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-muted-foreground hover:text-red-600 hover:bg-red-50"
+                      className="text-muted-foreground hover:bg-red-50 hover:text-red-600"
                       aria-label="Annuler la réservation"
                       onClick={(e) => {
                         e.preventDefault();
@@ -189,10 +189,10 @@ export function ReservationsList({
         footerAction &&
         limit &&
         reservations.length > limit && (
-          <div className="p-4 pt-0 border-t flex justify-end">
+          <div className="flex justify-end border-t p-4 pt-0">
             <Link
               href={footerAction.href}
-              className="text-sm text-primary hover:underline font-medium mt-4 inline-block"
+              className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
             >
               {footerAction.label}
             </Link>

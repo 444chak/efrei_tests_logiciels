@@ -72,7 +72,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-center text-2xl font-bold">
             Sign in
           </CardTitle>
           <CardDescription className="text-center">
@@ -109,7 +109,7 @@ export default function LoginPage() {
                 )}
               />
               {error && (
-                <div className="text-sm text-red-500 text-center">{error}</div>
+                <div className="text-center text-sm text-red-500">{error}</div>
               )}
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Signing in..." : "Sign in"}

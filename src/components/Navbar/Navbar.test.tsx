@@ -8,26 +8,14 @@ import {
 } from "@testing-library/react";
 import Navbar from "./index";
 
-// Mock Supabase
-const mockSignOut = vi.fn();
-const mockUnsubscribe = vi.fn();
-let authStateChangeCallback: any = null;
+import { mockAuth, mockSupabase, resetSupabaseMocks } from "@/test/mocks";
 
-const mockAuth = {
-  signOut: mockSignOut,
-  onAuthStateChange: vi.fn((cb) => {
-    authStateChangeCallback = cb;
-    return {
-      data: { subscription: { unsubscribe: mockUnsubscribe } },
-    };
-  }),
-};
-
-vi.mock("@/lib/supabase/client", () => ({
-  createClient: () => ({
-    auth: mockAuth,
-  }),
-}));
+vi.mock("@/lib/supabase/client", async () => {
+  const mocks = await import("@/test/mocks");
+  return {
+    createClient: () => mocks.mockSupabase,
+  };
+});
 
 import { mockUser } from "@/test/fixtures";
 
@@ -46,7 +34,7 @@ describe("Navbar", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    authStateChangeCallback = null;
+    resetSupabaseMocks();
 
     Object.defineProperty(window, "location", {
       value: { href: "" },
@@ -69,13 +57,11 @@ describe("Navbar", () => {
   it("opens menu and handles logout", async () => {
     render(<Navbar user={mockUser} />);
 
-    // Open dropdown
     const trigger = screen.getByRole("button");
     trigger.focus();
     fireEvent.pointerDown(trigger);
     fireEvent.click(trigger);
 
-    // Wait for dropdown content
     await waitFor(() => {
       expect(screen.getByText("Dashboard")).toBeInTheDocument();
     });
@@ -83,14 +69,12 @@ describe("Navbar", () => {
     const logoutBtn = screen.getByText("Log out");
     expect(logoutBtn).toBeInTheDocument();
 
-    // Click logout
     fireEvent.click(logoutBtn);
 
     await waitFor(() => {
-      expect(mockSignOut).toHaveBeenCalled();
+      expect(mockAuth.signOut).toHaveBeenCalled();
     });
 
-    // Check redirection
     expect(window.location.href).toBe("/login");
   });
 
@@ -101,11 +85,9 @@ describe("Navbar", () => {
 
     expect(mockAuth.onAuthStateChange).toHaveBeenCalled();
 
-    if (authStateChangeCallback) {
-      act(() => {
-        authStateChangeCallback("SIGNED_IN", { user: mockUser });
-      });
-    }
+    act(() => {
+      mockAuth.triggerAuthStateChange("SIGNED_IN", { user: mockUser });
+    });
 
     await waitFor(() => {
       expect(screen.queryByText("Login")).not.toBeInTheDocument();
@@ -116,12 +98,9 @@ describe("Navbar", () => {
   it("handles null session in auth change (explicit logout check)", async () => {
     render(<Navbar user={mockUser} />);
 
-    // Simulate auth change with null session
-    if (authStateChangeCallback) {
-      act(() => {
-        authStateChangeCallback("SIGNED_OUT", { session: null });
-      });
-    }
+    act(() => {
+      mockAuth.triggerAuthStateChange("SIGNED_OUT", { session: null });
+    });
 
     await waitFor(() => {
       expect(screen.getByText("Login")).toBeInTheDocument();
@@ -129,7 +108,6 @@ describe("Navbar", () => {
   });
 
   it("renders username initial fallback", () => {
-    // Current mockUser has username "Tester", so expects "T"
     render(<Navbar user={mockUser} />);
     expect(screen.getByText("T")).toBeInTheDocument();
   });
@@ -151,13 +129,7 @@ describe("Navbar", () => {
       email: "",
     };
     render(<Navbar user={userEmpty} />);
-    // When fallback fails to text, it renders UserIcon.
-    // Shadcn AvatarFallback renders children.
-    // We check for the SVG or a generic container if needed, but here checking
-    // that no text "T" or "A" is present + UserIcon SVG class or structure is present is enough.
-    // Let's assume the UserIcon renders an svg element.
     const button = screen.getByRole("button");
-    // We expect the fallback NOT to have simple text content like existing username/email stats
     expect(button).not.toHaveTextContent("T");
     expect(button).not.toHaveTextContent("A");
   });

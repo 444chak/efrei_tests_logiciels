@@ -46,12 +46,12 @@ npx vitest Navbar
 
 Pour générer un rapport de couverture :
 
-```bash
+````bash
 ```bash
 npm run coverage
-```
+````
 
-*Le rapport sera généré dans le dossier `coverage/`.*
+_Le rapport sera généré dans le dossier `coverage/`._
 
 ---
 
@@ -65,7 +65,7 @@ Pour ne lancer **QUE** les tests de sécurité :
 npx vitest security
 ```
 
-*(Cela filtre les fichiers contenant "security" dans leur chemin).*
+_(Cela filtre les fichiers contenant "security" dans leur chemin)._
 
 ---
 
@@ -86,11 +86,11 @@ k6 run perf/load-test.js
 Si le fichier n'existe pas encore, créez `perf/load-test.js` :
 
 ```javascript
-import http from 'k6/http';
-import { sleep } from 'k6';
+import http from "k6/http";
+import { sleep } from "k6";
 
 export default function () {
-  http.get('http://localhost:3000/api/rooms/booked');
+  http.get("http://localhost:3000/api/rooms/booked");
   sleep(1);
 }
 ```

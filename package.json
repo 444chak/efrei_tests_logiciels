@@ -6,7 +6,8 @@
     "start": "next start",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -51,6 +52,8 @@
     "@vitest/coverage-v8": "^4.0.17",
     "encoding": "^0.1.13",
     "jsdom": "^27.4.0",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "vitest": "^4.0.17"
   }
 }

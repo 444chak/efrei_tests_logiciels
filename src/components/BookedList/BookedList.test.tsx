@@ -2,20 +2,21 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BookedList } from "./index";
 import { Reservation } from "@/types";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { mockUseRouter, mockToast, mockRouter } from "@/test/mocks";
 
-// Mock dependencies
-vi.mock("next/navigation", () => ({
-  useRouter: vi.fn(),
-}));
+vi.mock("next/navigation", async () => {
+  const mocks = await import("@/test/mocks");
+  return {
+    useRouter: mocks.mockUseRouter,
+  };
+});
 
-vi.mock("sonner", () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+vi.mock("sonner", async () => {
+  const mocks = await import("@/test/mocks");
+  return {
+    toast: mocks.mockToast,
+  };
+});
 
 import { mockReservation } from "@/test/fixtures";
 
@@ -38,14 +39,11 @@ vi.mock("../ReservationsList", () => ({
 }));
 
 describe("BookedList", () => {
-  const refreshMock = vi.fn();
   const onRefreshPropMock = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue({
-      refresh: refreshMock,
-    });
+    mockRouter.refresh.mockClear();
 
     global.fetch = vi.fn();
   });
@@ -83,14 +81,11 @@ describe("BookedList", () => {
       />
     );
 
-    // Open dialog
     fireEvent.click(screen.getByTestId("cancel-btn-1"));
 
-    // Click confirm in dialog
     const confirmButton = screen.getByText("Confirmer l'annulation");
     fireEvent.click(confirmButton);
 
-    // Verify loading state if visible
     expect(screen.getByText("Annulation...")).toBeInTheDocument();
 
     await waitFor(() => {
@@ -99,10 +94,10 @@ describe("BookedList", () => {
       });
     });
 
-    expect(toast.success).toHaveBeenCalledWith(
+    expect(mockToast.success).toHaveBeenCalledWith(
       "Réservation annulée avec succès"
     );
-    expect(refreshMock).toHaveBeenCalled();
+    expect(mockRouter.refresh).toHaveBeenCalled();
     expect(onRefreshPropMock).toHaveBeenCalled();
   });
 
@@ -124,12 +119,12 @@ describe("BookedList", () => {
       fireEvent.click(confirmButton);
 
       await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith(
+        expect(mockToast.error).toHaveBeenCalledWith(
           "Impossible d'annuler la réservation"
         );
       });
 
-      expect(refreshMock).not.toHaveBeenCalled();
+      expect(mockRouter.refresh).not.toHaveBeenCalled();
 
       expect(consoleErrorMock).toHaveBeenCalled();
     } finally {
@@ -140,10 +135,8 @@ describe("BookedList", () => {
   it("does nothing if cancel is aborted", async () => {
     render(<BookedList reservations={[mockReservation]} />);
 
-    // Open dialog
     fireEvent.click(screen.getByTestId("cancel-btn-1"));
 
-    // Click cancel in dialog
     const cancelButton = screen.getByText("Annuler");
     fireEvent.click(cancelButton);
 

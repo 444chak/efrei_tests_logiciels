@@ -1,26 +1,26 @@
-import http from 'k6/http';
-import { check, sleep } from 'k6';
-import { SharedArray } from 'k6/data';
-import exec from 'k6/execution';
+import http from "k6/http";
+import { check, sleep } from "k6";
+import { SharedArray } from "k6/data";
+import exec from "k6/execution";
 
-const users = new SharedArray('users', function () {
-  return JSON.parse(open('../../scripts/k6-users.json')).slice(0, 5);
+const users = new SharedArray("users", function () {
+  return JSON.parse(open("../../scripts/k6-users.json")).slice(0, 5);
 });
 
 export const options = {
   stages: [
-    { duration: '30s', target: 5 },
-    { duration: '1m', target: 5 },
-    { duration: '30s', target: 0 },
+    { duration: "30s", target: 5 },
+    { duration: "1m", target: 5 },
+    { duration: "30s", target: 0 },
   ],
   thresholds: {
-    http_req_duration: ['p(95)<500'],
-    http_req_failed: ['rate<0.01'],
+    http_req_duration: ["p(95)<500"],
+    http_req_failed: ["rate<0.01"],
   },
 };
 
-const BASE_URL = 'http://localhost:3000';
-const ROOM_ID = '1';
+const BASE_URL = "http://localhost:3000";
+const ROOM_ID = "1";
 
 function getUserForVU() {
   return users[(exec.vu.idInTest - 1) % users.length];
@@ -36,7 +36,7 @@ function generateUniquePayload() {
 
   const slotTime = new Date(baseTime.getTime() + iteration * 30 * 60 * 1000);
 
-  const date = slotTime.toISOString().split('T')[0];
+  const date = slotTime.toISOString().split("T")[0];
   const time = slotTime.toTimeString().slice(0, 5);
 
   return { date, time, duration: 30 };
@@ -47,21 +47,23 @@ function login(user) {
     `${BASE_URL}/auth/login`,
     JSON.stringify({
       email: user.email,
-      password: user.password || 'Password123!',
+      password: user.password || "Password123!",
     }),
     {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       redirects: 0,
     }
   );
 
   const success = check(res, {
-    'login status 200': (r) => r.status === 200,
-    'has set-cookie': (r) => r.headers['Set-Cookie'] !== undefined,
+    "login status 200": (r) => r.status === 200,
+    "has set-cookie": (r) => r.headers["Set-Cookie"] !== undefined,
   });
 
   if (!success) {
-    console.error(`Login failed for ${user.email}: Status ${res.status} Body: ${res.body}`);
+    console.error(
+      `Login failed for ${user.email}: Status ${res.status} Body: ${res.body}`
+    );
   }
 }
 
@@ -79,8 +81,8 @@ export default function () {
   const params = {
     redirects: 0,
     headers: {
-      'Content-Type': 'application/json',
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   const getRes = http.get(
@@ -89,8 +91,10 @@ export default function () {
   );
 
   check(getRes, {
-    'GET status 200': (r) => r.status === 200,
-    'GET is JSON': (r) => r.headers['Content-Type'] && r.headers['Content-Type'].includes('application/json'),
+    "GET status 200": (r) => r.status === 200,
+    "GET is JSON": (r) =>
+      r.headers["Content-Type"] &&
+      r.headers["Content-Type"].includes("application/json"),
   });
 
   if (getRes.status === 307 || getRes.status === 401) {
@@ -106,7 +110,7 @@ export default function () {
   );
 
   check(postRes, {
-    'POST status 201': (r) => r.status === 201,
+    "POST status 201": (r) => r.status === 201,
   });
 
   if (postRes.status !== 201) {

@@ -52,7 +52,7 @@ export default function HistoryPage() {
         >
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             Retour au tableau de bord

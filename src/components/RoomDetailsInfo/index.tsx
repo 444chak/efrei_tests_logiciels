@@ -14,7 +14,7 @@ interface RoomDetailsInfoProps {
 
 export function RoomDetailsInfo({ room }: RoomDetailsInfoProps) {
   return (
-    <Card className="max-w-7xl mx-auto">
+    <Card className="mx-auto max-w-7xl">
       <CardHeader>
         <CardTitle className="text-2xl md:text-3xl">
           {room.name ?? `Salle ${room.id}`}
@@ -23,19 +23,19 @@ export function RoomDetailsInfo({ room }: RoomDetailsInfoProps) {
       <CardContent className="space-y-4">
         {room.description ? (
           <div>
-            <h3 className="font-semibold mb-1 text-lg">Description</h3>
-            <p className="text-muted-foreground leading-relaxed">
+            <h3 className="mb-1 text-lg font-semibold">Description</h3>
+            <p className="leading-relaxed text-muted-foreground">
               {room.description}
             </p>
           </div>
         ) : (
-          <p className="text-muted-foreground italic">
+          <p className="italic text-muted-foreground">
             Aucune description disponible.
           </p>
         )}
 
         {room.capacite !== undefined && (
-          <div className="flex items-center gap-2 mt-4 pt-4 border-t">
+          <div className="mt-4 flex items-center gap-2 border-t pt-4">
             <span className="font-semibold">Capacité:</span>
             <span>
               {room.capacite} personne{room.capacite > 1 ? "s" : ""}

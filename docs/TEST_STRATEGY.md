@@ -40,21 +40,21 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 #### Composants Métier
 
 1. `Navbar` :
-    - Affichage liens "Login/Sign up" si déconnecté.
-    - Affichage avatar/menu si connecté.
+   - Affichage liens "Login/Sign up" si déconnecté.
+   - Affichage avatar/menu si connecté.
 2. `BookedList` :
-    - Affichage de la liste des réservations.
-    - Ouverture de la modale de confirmation au clic sur "Annuler".
+   - Affichage de la liste des réservations.
+   - Ouverture de la modale de confirmation au clic sur "Annuler".
 3. `ReservationForm` :
-    - Validation des champs obligatoires (date, heure).
-    - Affichage d'erreur si date passée.
+   - Validation des champs obligatoires (date, heure).
+   - Affichage d'erreur si date passée.
 
 #### Hooks
 
 1. `useUserReservations` :
-    - Vérifier l'état initial (loading).
-    - Vérifier l'état après succès (data populated).
-    - Vérifier la gestion d'erreur (API fail).
+   - Vérifier l'état initial (loading).
+   - Vérifier l'état après succès (data populated).
+   - Vérifier la gestion d'erreur (API fail).
 
 ---
 

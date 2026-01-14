@@ -17,14 +17,14 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-50">
-          <div className="container px-4 md:px-6 mx-auto">
+        <section className="w-full bg-gray-50 py-12 md:py-24 lg:py-32 xl:py-48">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                   Réservez votre salle idéale
                 </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
                   EasyBooking simplifie la recherche et la réservation de salles
                   pour vos réunions et événements.
                 </p>
@@ -50,9 +50,9 @@ export default async function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid gap-10 sm:px-10 md:gap-16 md:grid-cols-2">
+        <section className="w-full bg-white py-12 md:py-24 lg:py-32">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="grid gap-10 sm:px-10 md:grid-cols-2 md:gap-16">
               <div className="space-y-4">
                 <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm">
                   Simple
@@ -89,15 +89,15 @@ export default async function Home() {
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+      <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t px-4 py-6 sm:flex-row md:px-6">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           © 2026 EasyBooking. Tous droits réservés.
         </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
+        <nav className="flex gap-4 sm:ml-auto sm:gap-6">
+          <Link className="text-xs underline-offset-4 hover:underline" href="#">
             Conditions d'utilisation
           </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
+          <Link className="text-xs underline-offset-4 hover:underline" href="#">
             Confidentialité
           </Link>
         </nav>

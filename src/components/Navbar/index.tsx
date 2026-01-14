@@ -48,14 +48,14 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
   };
 
   return (
-    <header className="px-4 lg:px-6 h-14 flex items-center border-b font-medium">
+    <header className="flex h-14 items-center border-b px-4 font-medium lg:px-6">
       <Link
-        className="flex items-center justify-center font-bold text-xl"
+        className="flex items-center justify-center text-xl font-bold"
         href="/"
       >
         EasyBooking
       </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
+      <nav className="ml-auto flex items-center gap-4 sm:gap-6">
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -86,7 +86,7 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
               <DropdownMenuItem asChild>
                 <Link
                   href="/dashboard"
-                  className="cursor-pointer w-full flex items-center"
+                  className="flex w-full cursor-pointer items-center"
                 >
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>

@@ -3,13 +3,14 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { RoomReservationForm } from "./index";
 import { toast } from "sonner";
 
-// Mock Sonner
-vi.mock("sonner", () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
+import { mockToast } from "@/test/mocks";
+
+vi.mock("sonner", async () => {
+  const mocks = await import("@/test/mocks");
+  return {
+    toast: mocks.mockToast,
+  };
+});
 
 vi.mock("@/components/ui/calendar", () => {
   return {
@@ -58,7 +59,9 @@ describe("RoomReservationForm", () => {
     const submitBtn = screen.getByText("Réserver");
     fireEvent.click(submitBtn);
 
-    expect(toast.error).toHaveBeenCalledWith("Veuillez sélectionner une date.");
+    expect(mockToast.error).toHaveBeenCalledWith(
+      "Veuillez sélectionner une date."
+    );
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
@@ -86,7 +89,7 @@ describe("RoomReservationForm", () => {
       );
     });
 
-    expect(toast.success).toHaveBeenCalledWith(
+    expect(mockToast.success).toHaveBeenCalledWith(
       "Réservation effectuée avec succès !"
     );
     expect(onSuccess).toHaveBeenCalled();
@@ -104,7 +107,7 @@ describe("RoomReservationForm", () => {
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Créneau indisponible");
+      expect(mockToast.error).toHaveBeenCalledWith("Créneau indisponible");
     });
   });
 
@@ -120,7 +123,9 @@ describe("RoomReservationForm", () => {
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Erreur lors de la réservation");
+      expect(mockToast.error).toHaveBeenCalledWith(
+        "Erreur lors de la réservation"
+      );
     });
   });
 
@@ -133,7 +138,7 @@ describe("RoomReservationForm", () => {
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Network Error");
+      expect(mockToast.error).toHaveBeenCalledWith("Network Error");
     });
   });
   it("includes selected time and duration in reservation", async () => {

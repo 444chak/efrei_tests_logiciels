@@ -82,7 +82,7 @@ export default function RoomDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen p-4">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-lg">
           <CardHeader>
             <CardTitle>Chargement...</CardTitle>
@@ -99,7 +99,7 @@ export default function RoomDetailPage() {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen p-4">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-lg border-red-500">
           <CardHeader>
             <CardTitle className="text-red-600">Erreur</CardTitle>
@@ -115,7 +115,7 @@ export default function RoomDetailPage() {
 
   if (!room) {
     return (
-      <div className="flex justify-center items-center min-h-screen p-4">
+      <div className="flex min-h-screen items-center justify-center p-4">
         <Card className="w-full max-w-lg">
           <CardHeader>
             <CardTitle>Introuvable</CardTitle>
@@ -130,7 +130,7 @@ export default function RoomDetailPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 md:p-10 max-w-7xl">
+    <div className="container mx-auto max-w-7xl p-6 md:p-10">
       <div className="mb-8">
         <Button
           variant="ghost"
@@ -139,7 +139,7 @@ export default function RoomDetailPage() {
         >
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
             Retour au tableau de bord
@@ -151,7 +151,7 @@ export default function RoomDetailPage() {
         <RoomDetailsInfo room={room} />
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-10 items-start">
+      <div className="grid items-start gap-10 lg:grid-cols-12">
         <div className="lg:col-span-4 xl:col-span-4">
           <div className="sticky top-6">
             <RoomReservationForm

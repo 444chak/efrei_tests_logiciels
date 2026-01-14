@@ -66,7 +66,7 @@ export function RoomReservationForm({
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader>
         <CardTitle>Réserver un créneau</CardTitle>
       </CardHeader>
@@ -74,7 +74,7 @@ export function RoomReservationForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col space-y-2">
             <Label>Date</Label>
-            <div className="border rounded-md p-2 flex justify-center">
+            <div className="flex justify-center rounded-md border p-2">
               <Calendar
                 mode="single"
                 selected={date}
