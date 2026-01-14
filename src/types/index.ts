@@ -7,10 +7,8 @@ export interface Room {
 
 export interface Reservation {
   id: number;
-  user_id: string; // Used in RoomReservationsHistory/List
-  id_user?: string; // Sometimes used in API responses? Keeping for safety if needed, though user_id seems standard in components.
-  room_id?: number; // Used in History
-  id_room?: number; // Used in List
+  id_user?: string;
+  id_room?: number;
   start_time: string;
   end_time: string;
   created_at?: string;

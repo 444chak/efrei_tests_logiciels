@@ -88,12 +88,10 @@ export function ReservationsList({
                               )}`}
                               className="hover:underline"
                             >
-                              {res.rooms?.name ||
-                                `Salle ${res.room_id || res.id_room}`}
+                              {res.rooms?.name || `Salle ${res.id_room}`}
                             </Link>
                           ) : (
-                            res.rooms?.name ||
-                            `Salle ${res.room_id || res.id_room}`
+                            res.rooms?.name || `Salle ${res.id_room}`
                           )}
                         </span>
                       </div>

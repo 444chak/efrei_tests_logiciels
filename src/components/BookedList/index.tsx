@@ -34,8 +34,6 @@ export function BookedList({
   };
 
   const confirmCancel = async () => {
-    if (!deleteId) return;
-
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/reservations/${deleteId}`, {
