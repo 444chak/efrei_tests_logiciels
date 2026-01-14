@@ -47,7 +47,8 @@ npx vitest Navbar
 Pour générer un rapport de couverture :
 
 ```bash
-npx vitest run --coverage
+```bash
+npm run coverage
 ```
 
 *Le rapport sera généré dans le dossier `coverage/`.*
@@ -100,8 +101,8 @@ export default function () {
 
 | Type de Test    | Commande                    | Description                           |
 | --------------- | --------------------------- | ------------------------------------- |
-| **Tous**        | `npx vitest run`            | Lance Unit, Integration, Security     |
+| **Tous**        | `npm run test`              | Lance Unit, Integration, Security     |
 | **Unitaires**   | `npx vitest src/components` | Lance uniquement les tests composants |
 | **Sécurité**    | `npx vitest security`       | Lance les scénarios d'attaque         |
 | **Performance** | `k6 run perf/script.js`     | Lance le test de charge (requiert k6) |
-| **Couverture**  | `npx vitest run --coverage` | Affiche le % de code couvert          |
+| **Couverture**  | `npm run coverage`          | Affiche le % de code couvert          |
