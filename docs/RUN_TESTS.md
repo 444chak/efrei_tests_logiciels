@@ -98,10 +98,10 @@ export default function () {
 
 ## Résumé des Commandes
 
-| Type de Test | Commande | Description |
-|--------------|----------|-------------|
-| **Tous** | `npx vitest run` | Lance Unit, Integration, Security |
-| **Unitaires** | `npx vitest src/components` | Lance uniquement les tests composants |
-| **Sécurité** | `npx vitest security` | Lance les scénarios d'attaque |
-| **Performance**| `k6 run perf/script.js` | Lance le test de charge (requiert k6) |
-| **Couverture** | `npx vitest run --coverage` | Affiche le % de code couvert |
+| Type de Test    | Commande                    | Description                           |
+| --------------- | --------------------------- | ------------------------------------- |
+| **Tous**        | `npx vitest run`            | Lance Unit, Integration, Security     |
+| **Unitaires**   | `npx vitest src/components` | Lance uniquement les tests composants |
+| **Sécurité**    | `npx vitest security`       | Lance les scénarios d'attaque         |
+| **Performance** | `k6 run perf/script.js`     | Lance le test de charge (requiert k6) |
+| **Couverture**  | `npx vitest run --coverage` | Affiche le % de code couvert          |

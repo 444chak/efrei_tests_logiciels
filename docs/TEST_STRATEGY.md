@@ -21,7 +21,7 @@ Ce document définit la stratégie de test pour l'application **EasyBooking**. N
 - Chaque composant, hook, et fonction utilitaire doit avoir son propre fichier de test.
 - Mocker systématiquement les dépendances externes (API calls, Supabase, Navigation).
 
-### Cas de Tests Requis (Minimum 10)
+### Cas de Tests Requis (Minimum 10) - Unit Tests
 
 Les développeurs doivent implémenter les cas suivants pour assurer la couverture :
 
@@ -33,13 +33,13 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 
 #### Composants UI (Design System)
 
-4. `Button` : Vérifier le rendu des variants (ghost, default, destructive).
+1. `Button` : Vérifier le rendu des variants (ghost, default, destructive).
 2. `Input` : Vérifier que l'input accepte du texte et gère les états `disabled`.
 3. `Dialog/Modal` : Vérifier que la modale s'ouvre/se ferme au clic.
 
 #### Composants Métier
 
-7. `Navbar` :
+1. `Navbar` :
     - Affichage liens "Login/Sign up" si déconnecté.
     - Affichage avatar/menu si connecté.
 2. `BookedList` :
@@ -51,7 +51,7 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 
 #### Hooks
 
-10. `useUserReservations` :
+1. `useUserReservations` :
     - Vérifier l'état initial (loading).
     - Vérifier l'état après succès (data populated).
     - Vérifier la gestion d'erreur (API fail).
@@ -63,7 +63,7 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 **Technologie** : Vitest (Environnement Node/DOM)
 **Objectif** : Valider le flux de données entre l'API, le Client et la Base de données (Simulé).
 
-### Cas de Tests Requis (Minimum 10)
+### Cas de Tests Requis (Minimum 10) - Intégration
 
 #### API Routes (Backend)
 
@@ -75,7 +75,7 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 
 #### Flux Complet (Frontend <-> API simulée)
 
-6. **Login Flow** : Soumission du formulaire -> Appel API Supabase -> Redirection Dashboard.
+1. **Login Flow** : Soumission du formulaire -> Appel API Supabase -> Redirection Dashboard.
 2. **Booking Flow** : Sélection date/salle -> Soumission -> Mise à jour liste réservations.
 3. **Cancel Flow** : Clic bouton Annuler -> Confirmation -> Disparition de l'élément dans la liste.
 4. **Date Navigation** : Changement de date dans le calendrier -> Rafraîchissement des disponibilités.
@@ -88,7 +88,7 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 **Technologie** : Vitest (Scénarios d'attaque)
 **Objectif** : Prévenir les failles critiques (OWASP).
 
-### Cas de Tests Requis (Minimum 10)
+### Cas de Tests Requis (Minimum 10) - Sécurité
 
 #### Authentification & Autorisation
 
@@ -97,19 +97,19 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 
 #### IDOR (Insecure Direct Object Reference)
 
-3. **Delete Others** : Utilisateur A tente de supprimer réservation de l'Utilisateur B -> 403.
+1. **Delete Others** : Utilisateur A tente de supprimer réservation de l'Utilisateur B -> 403.
 2. **View Others** : Utilisateur A tente de voir détails facture Utilisateur B -> 403.
 
 #### Input Validation & Injection
 
-5. **XSS dans Nom** : Création compte avec `<script>alert(1)</script>` -> Le script ne s'exécute pas.
+1. **XSS dans Nom** : Création compte avec `<script>alert(1)</script>` -> Le script ne s'exécute pas.
 2. **SQL Injection** : Payload `' OR 1=1 --` dans login -> Rejeté ou traité comme string littéral.
 3. **Bad Data Types** : Envoi `dates: "invalid"` à l'API -> 400 Bad Request (Validation Zod).
 4. **Negative Numbers** : Envoi `duration: -5` -> Rejeté.
 
 #### Logique Métier
 
-9. **Rate Limiting** (Simulé) : 100 requêtes/seconde sur Login -> Blocage IP temporaire (si implémenté) ou 429.
+1. **Rate Limiting** (Simulé) : 100 requêtes/seconde sur Login -> Blocage IP temporaire (si implémenté) ou 429.
 2. **Privilege Escalation** : Utilisateur standard tente accès endpoint Admin -> 403.
 
 ---
@@ -119,7 +119,7 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 **Technologie** : k6 (Load Testing)
 **Objectif** : Garantir la stabilité sous charge.
 
-### Cas de Tests Requis (Minimum 10 Scénarios)
+### Cas de Tests Requis (Minimum 10 Scénarios) - Performance
 
 #### Load Testing (Charge Moyenne)
 
@@ -129,21 +129,21 @@ Les développeurs doivent implémenter les cas suivants pour assurer la couvertu
 
 #### Stress Testing (Pic de Charge)
 
-4. **Login Spike** : 100 VUs se connectent simultanément en 10s.
+1. **Login Spike** : 100 VUs se connectent simultanément en 10s.
 2. **Search Spike** : 200 recherches de salles simultanées.
 
 #### Endurance Testing (Durée)
 
-6. **Browsing** : 10 VUs naviguent en continu pendant 10 minutes (fuite mémoire ?).
+1. **Browsing** : 10 VUs naviguent en continu pendant 10 minutes (fuite mémoire ?).
 
 #### Latency Checks
 
-7. **API Response Time** : Vérifier que 95% des requêtes `/api/reservations` < 200ms.
+1. **API Response Time** : Vérifier que 95% des requêtes `/api/reservations` < 200ms.
 2. **Static Assets** : Temps de chargement des images/CSS (simulé).
 
 #### Scénarios Critiques
 
-9. **Concurrent Booking** : 2 utilisateurs réservent la même salle au même moment (Race condition).
+1. **Concurrent Booking** : 2 utilisateurs réservent la même salle au même moment (Race condition).
 2. **Database Connection** : Comportement si 50 connexion simultanées à Supabase.
 
 ---
