@@ -1,0 +1,97 @@
+name: Nightly Tests (Non-Functional)
+
+on:
+  workflow_dispatch:
+    description: "Lancer les tests non-fonctionnels (Sécurité & Performance)"
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  # ============================================
+  # Job 1 : Tests de Sécurité
+  # ============================================
+  security:
+    name: Security Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Security Tests
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://mock-project.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vY2stcHJvamVjdCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQwOTk2MDAwLCJleHAiOjE5NTY1NzIwMDB9.mock
+        run: npx vitest run security
+
+  # ============================================
+  # Job 2 : Tests de Performance (K6)
+  # ============================================
+  performance:
+    name: Performance Tests (K6)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js application
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://mock-project.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vY2stcHJvamVjdCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQwOTk2MDAwLCJleHAiOjE5NTY1NzIwMDB9.mock
+        run: npm run build
+
+      - name: Install K6 and curl
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415C3642D57D77C6C491D6AC1D53
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6 curl
+
+      - name: Verify K6 installation
+        run: k6 version
+
+      - name: Start Next.js server in background
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://mock-project.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vY2stcHJvamVjdCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQwOTk2MDAwLCJleHAiOjE5NTY1NzIwMDB9.mock
+        run: |
+          npm start &
+          echo $! > server.pid
+          # Attendre que le serveur soit prêt (max 60 secondes)
+          timeout 60 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done' || exit 1
+          echo "✅ Server is ready on http://localhost:3000"
+
+      - name: Run K6 Performance Tests
+        run: k6 run src/__tests__/perf/script.js
+
+      - name: Stop Next.js server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) 2>/dev/null || true
+            rm server.pid
+          fi
+          # Nettoyer les processus Node.js restants
+          pkill -f "next start" 2>/dev/null || true
