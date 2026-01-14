@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { RoomReservationsList } from "@/components/roomReservationsList";
-import { RoomDetailsInfo, Room } from "@/components/roomDetailsInfo";
-import { RoomReservationForm } from "@/components/roomReservationForm";
+import { RoomReservationsList } from "@/components/RoomReservationsList";
+import { RoomDetailsInfo, Room } from "@/components/RoomDetailsInfo";
+import { RoomReservationForm } from "@/components/RoomReservationForm";
 
 export default function RoomDetailPage() {
   const params = useParams();
