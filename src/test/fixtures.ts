@@ -4,18 +4,26 @@ import { Room, Reservation } from "@/types";
 // User Fixtures
 // ============================================================================
 
-export interface MockUser {
+import { User } from "@supabase/supabase-js";
+
+export interface MockUser extends Partial<User> {
   id: string;
   email: string;
   user_metadata?: {
     username?: string;
   };
+  app_metadata?: Record<string, unknown>;
+  aud?: string;
+  created_at?: string;
 }
 
 export const mockUser: MockUser = {
   id: "user-123",
   email: "test@example.com",
   user_metadata: { username: "Tester" },
+  app_metadata: {},
+  aud: "authenticated",
+  created_at: "2023-01-01T00:00:00.000Z",
 };
 
 // ============================================================================

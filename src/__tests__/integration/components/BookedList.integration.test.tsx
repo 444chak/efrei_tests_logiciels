@@ -1,11 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { BookedList } from "@/components/BookedList";
-import {
-  mockToast,
-  mockRouter,
-  resetMockRouter,
-} from "@/test/mocks";
+import { mockToast, mockRouter, resetMockRouter } from "@/test/mocks";
 
 vi.mock("next/navigation", async () => {
   const mocks = await import("@/test/mocks");
@@ -36,7 +32,7 @@ vi.mock("@/components/ReservationsList", () => ({
         <div key={res.id}>
           <span>{res.rooms?.name}</span>
           <button
-            onClick={() => onCancel(res.id)}
+            onClick={() => onCancel?.(res.id)}
             data-testid={`cancel-btn-${res.id}`}
           >
             Cancel {res.id}
@@ -79,9 +75,11 @@ describe("BookedList", () => {
   });
 
   it("handles successful cancellation", async () => {
-    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-    });
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      {
+        ok: true,
+      }
+    );
 
     render(
       <BookedList
@@ -115,9 +113,11 @@ describe("BookedList", () => {
     const consoleErrorMock = vi.fn();
     console.error = consoleErrorMock;
 
-    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: false,
-    });
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      {
+        ok: false,
+      }
+    );
 
     try {
       render(<BookedList reservations={[mockReservation]} />);

@@ -18,6 +18,7 @@ vi.mock("@/lib/supabase/client", async () => {
 });
 
 import { mockUser } from "@/test/fixtures";
+import { User } from "@supabase/supabase-js";
 
 // Mock ResizeObserver for Radix UI
 class ResizeObserverMock {
@@ -49,13 +50,13 @@ describe("Navbar", () => {
   });
 
   it("renders User Avatar when user is present", () => {
-    render(<Navbar user={mockUser} />);
+    render(<Navbar user={mockUser as User} />);
     expect(screen.queryByText("Connexion")).not.toBeInTheDocument();
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
   it("opens menu and handles logout", async () => {
-    render(<Navbar user={mockUser} />);
+    render(<Navbar user={mockUser as User} />);
 
     const trigger = screen.getByRole("button");
     trigger.focus();
@@ -86,7 +87,7 @@ describe("Navbar", () => {
     expect(mockAuth.onAuthStateChange).toHaveBeenCalled();
 
     act(() => {
-      mockAuth.triggerAuthStateChange("SIGNED_IN", { user: mockUser });
+      mockAuth.triggerAuthStateChange("SIGNED_IN", { user: mockUser as User });
     });
 
     await waitFor(() => {
@@ -96,7 +97,7 @@ describe("Navbar", () => {
   });
 
   it("handles null session in auth change (explicit logout check)", async () => {
-    render(<Navbar user={mockUser} />);
+    render(<Navbar user={mockUser as User} />);
 
     act(() => {
       mockAuth.triggerAuthStateChange("SIGNED_OUT", { session: null });
@@ -108,27 +109,27 @@ describe("Navbar", () => {
   });
 
   it("renders username initial fallback", () => {
-    render(<Navbar user={mockUser} />);
+    render(<Navbar user={mockUser as User} />);
     expect(screen.getByText("T")).toBeInTheDocument();
   });
 
   it("renders email initial fallback when username missing", () => {
-    const userNoName = {
+    const userNoName: typeof mockUser = {
       ...mockUser,
       user_metadata: {},
       email: "alpha@example.com",
     };
-    render(<Navbar user={userNoName} />);
+    render(<Navbar user={userNoName as User} />);
     expect(screen.getByText("A")).toBeInTheDocument();
   });
 
   it("renders default user icon when no username or email", () => {
-    const userEmpty = {
+    const userEmpty: typeof mockUser = {
       ...mockUser,
       user_metadata: {},
       email: "",
     };
-    render(<Navbar user={userEmpty} />);
+    render(<Navbar user={userEmpty as User} />);
     const button = screen.getByRole("button");
     expect(button).not.toHaveTextContent("T");
     expect(button).not.toHaveTextContent("A");

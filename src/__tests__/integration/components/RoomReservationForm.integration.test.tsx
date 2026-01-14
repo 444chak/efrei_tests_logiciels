@@ -26,10 +26,10 @@ vi.mock("@/components/ui/calendar", () => {
         <span data-testid="selected-date">
           {selected ? selected.toString() : "No Date"}
         </span>
-        <button type="button" onClick={() => onSelect(undefined)}>
+        <button type="button" onClick={() => onSelect?.(undefined)}>
           Clear Date
         </button>
-        <button type="button" onClick={() => onSelect(new Date(2023, 0, 2))}>
+        <button type="button" onClick={() => onSelect?.(new Date(2023, 0, 2))}>
           Select Jan 2
         </button>
         <div data-testid="disabled-check">
@@ -74,10 +74,12 @@ describe("RoomReservationForm", () => {
 
   it("handles successful reservation", async () => {
     const onSuccess = vi.fn();
-    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ success: true }),
-    });
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      {
+        ok: true,
+        json: async () => ({ success: true }),
+      }
+    );
 
     render(<RoomReservationForm roomId={1} onReservationSuccess={onSuccess} />);
 
@@ -103,10 +105,12 @@ describe("RoomReservationForm", () => {
   });
 
   it("handles API error", async () => {
-    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: "Créneau indisponible" }),
-    });
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      {
+        ok: false,
+        json: async () => ({ error: "Créneau indisponible" }),
+      }
+    );
 
     render(<RoomReservationForm roomId={1} onReservationSuccess={() => {}} />);
 
@@ -119,10 +123,12 @@ describe("RoomReservationForm", () => {
   });
 
   it("handles API error with default message", async () => {
-    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({}),
-    });
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      {
+        ok: false,
+        json: async () => ({}),
+      }
+    );
 
     render(<RoomReservationForm roomId={1} onReservationSuccess={() => {}} />);
 
@@ -151,10 +157,12 @@ describe("RoomReservationForm", () => {
     });
   });
   it("includes selected time and duration in reservation", async () => {
-    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ success: true }),
-    });
+    (global.fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      {
+        ok: true,
+        json: async () => ({ success: true }),
+      }
+    );
 
     render(<RoomReservationForm roomId={1} onReservationSuccess={() => {}} />);
 

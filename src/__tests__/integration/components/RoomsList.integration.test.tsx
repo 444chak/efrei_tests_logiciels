@@ -98,7 +98,7 @@ describe("RoomsList", () => {
     });
   });
   it("does not update state if unmounted during fetch", async () => {
-    let resolveFetch: (value: unknown) => void;
+    let resolveFetch: ((value: unknown) => void) | undefined;
     (global.fetch as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
       new Promise((resolve) => {
         resolveFetch = resolve;
@@ -109,16 +109,18 @@ describe("RoomsList", () => {
 
     unmount();
 
-    resolveFetch({
-      ok: true,
-      json: async () => [{ id: 1, name: "Leaked Room" }],
-    });
+    if (resolveFetch) {
+      resolveFetch({
+        ok: true,
+        json: async () => [{ id: 1, name: "Leaked Room" }],
+      });
+    }
 
     await new Promise((resolve) => setTimeout(resolve, 100));
   });
 
   it("does not update error state if unmounted during fetch error", async () => {
-    let rejectFetch: (reason?: unknown) => void;
+    let rejectFetch: ((reason?: unknown) => void) | undefined;
     (global.fetch as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
       new Promise((_, reject) => {
         rejectFetch = reject;
@@ -129,7 +131,9 @@ describe("RoomsList", () => {
 
     unmount();
 
-    rejectFetch(new Error("Unmounted Failure"));
+    if (rejectFetch) {
+      rejectFetch(new Error("Unmounted Failure"));
+    }
 
     await new Promise((resolve) => setTimeout(resolve, 100));
   });

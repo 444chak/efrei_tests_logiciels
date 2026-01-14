@@ -29,13 +29,13 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Le nom d'utilisateur doit contenir au moins 2 caractères.",
   }),
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: "Veuillez entrer une adresse email valide.",
   }),
   password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
+    message: "Le mot de passe doit contenir au moins 6 caractères.",
   }),
 });
 
@@ -68,7 +68,9 @@ export default function SignupPage() {
       setError(result.error);
       setLoading(false);
     } else if (result?.success) {
-      toast.success("Account created! Please check your email to validate.");
+      toast.success(
+        "Compte créé ! Veuillez vérifier votre email pour valider."
+      );
       router.push("/login");
     }
   }
@@ -78,10 +80,10 @@ export default function SignupPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-center text-2xl font-bold">
-            Create an account
+            Créer un compte
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your email below to create your account
+            Entrez vos informations ci-dessous pour créer votre compte
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -92,7 +94,7 @@ export default function SignupPage() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Nom d'utilisateur</FormLabel>
                     <FormControl>
                       <Input placeholder="johndoe" {...field} />
                     </FormControl>
@@ -118,7 +120,7 @@ export default function SignupPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Mot de passe</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -130,16 +132,16 @@ export default function SignupPage() {
                 <div className="text-center text-sm text-red-500">{error}</div>
               )}
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing up..." : "Sign up"}
+                {loading ? "Inscription en cours..." : "S'inscrire"}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <div className="text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Vous avez déjà un compte ?{" "}
             <Link href="/login" className="text-primary hover:underline">
-              Sign in
+              Se connecter
             </Link>
           </div>
         </CardFooter>
