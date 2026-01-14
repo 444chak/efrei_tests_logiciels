@@ -1,86 +1,178 @@
-# Plan de Test Complet - EasyBooking
+# Plan de Test - EasyBooking
 
 ## 1. Introduction
 
-Ce document décrit la stratégie de test mise en œuvre pour l'application EasyBooking. L'objectif est de garantir la fiabilité, la sécurité et la performance de l'application avant son déploiement.
+Ce document définit la stratégie de test et le périmètre de validation pour l'application **EasyBooking**. Il a pour objectif de garantir la qualité, la fiabilité, la sécurité et les performances de l'application avant sa mise en production.
 
-## 2. Périmètre des Tests
+Le présent plan de test établit les critères d'acceptation, les méthodes de test et les outils utilisés pour valider l'ensemble des fonctionnalités critiques de la plateforme de réservation de salles.
 
-Les tests couvrent l'ensemble des fonctionnalités critiques de l'application :
+---
 
-* Authentification (Login, Logout, Protection des routes)
-* Gestion des Salles (Affichage, Recherche)
-* Réservation (Création, Annulation, Validation)
-* Sécurité (Injections, IDOR, Droits)
+## 2. Périmètre
 
-## 3. Types de Tests Implémentés
+Le périmètre de test couvre l'ensemble des fonctionnalités métier de l'application EasyBooking :
+
+### 2.1 Authentification
+
+- Connexion utilisateur (Login)
+- Inscription utilisateur (Signup)
+- Déconnexion (Logout)
+- Protection des routes authentifiées
+- Gestion des sessions utilisateur
+
+### 2.2 Réservation
+
+- Consultation des disponibilités de salles
+- Création de réservation avec validation des conflits
+- Annulation de réservation
+- Visualisation des réservations (historique et à venir)
+- Validation des créneaux horaires
+
+### 2.3 Gestion des Chambres
+
+- Affichage de la liste des salles disponibles
+- Consultation des détails d'une salle
+- Filtrage et recherche de salles
+- Affichage des caractéristiques (capacité, équipements)
+
+---
+
+## 3. Stratégie de Test
+
+La stratégie de test repose sur quatre niveaux de validation complémentaires, conformes aux standards ISTQB :
 
 ### 3.1 Tests Unitaires
 
-* **Objectif** : Valider le fonctionnement isolé des composants et fonctions utilitaires.
-* **Outils** : Vitest, React Testing Library.
-* **Couverture** : > 80% sur les composants critiques (`Navbar`, `BookedList`, `UsageForm`, etc.).
-* **Exemples** :
-  * `src/lib/utils.test.ts` : Validation des classes CSS.
-  * `BookedList.test.tsx` : Vérification du rendu et des appels de mocks.
+**Objectif** : Valider le fonctionnement isolé des composants React et des fonctions utilitaires sans dépendances externes.
 
-### 3.2 Tests d'Intégration
+**Approche** : Tests white-box sur des unités de code isolées (composants, fonctions pures, helpers).
 
-* **Objectif** : Valider les interactions entre les composants et les flux de données (API, Navigation).
-* **Quantité** : 10 cas de tests validés.
-* **Flux Testés** :
-    1. Flux de Login complet (Formulaire -> API -> Redirection).
-    2. Flux de Réservation (UI -> POST API -> Toast succès).
-    3. Flux d'Annulation (UI -> Modal -> DELETE API).
-    4. Navigation inter-pages.
-    5. Gestion des erreurs réseau.
+**Outils** : Vitest, React Testing Library, jsdom
 
-### 3.3 Tests de Sécurité (10 Scenarios)
+**Couverture** :
 
-* **Objectif** : Identifier les vulnérabilités courantes.
-* **Fichier** : `src/__tests__/security/protection.test.ts`.
-* **Scénarios** :
-    1. Accès non authentifié (401).
-    2. IDOR (Suppression réservation d'autrui - 403).
-    3. Suppression légitime (Propriétaire - 200).
-    4. Injection SQL (Simulation input malveillant).
-    5. Injection XSS (Sanitization).
-    6. Validation des dates (Rejet formats invalides).
-    7. Méthodes HTTP strictes (GET sur endpoint POST).
-    8. Content-Type JSON.
-    9. Rejet des dates passées (400).
-    10. Double Booking (Conflit de créneau - 409).
+- Composants UI (`Navbar`, `BookedList`, `RoomReservationForm`, `RoomsList`)
+- Fonctions utilitaires (`src/lib/utils.ts`)
+- Hooks personnalisés
 
-### 3.4 Tests de Performance (10 Scenarios)
+**Localisation** : `src/components/**/*.test.tsx`, `src/lib/**/*.test.ts`
 
-* **Objectif** : Valider la tenue en charge.
-* **Outil** : K6.
-* **Script** : `src/__tests__/perf/script.js`.
-* **Scénarios** :
-    1. Chargement Asset Statique.
-    2. Login Échoué.
-    3. Login Succès.
-    4. Accès Dashboard.
-    5. Liste des Salles.
-    6. Détail Salle.
-    7. Liste Réservations.
-    8. Création Réservation.
-    9. Logout.
-    10. Vérification Accès post-logout.
+### 3.2 Tests d'Intégration API
 
-## 4. Environnement de Test
+**Objectif** : Valider l'interaction entre les composants frontend et les routes API, ainsi que l'assemblage technique des modules.
 
-* **Local** : Exécution via `npm test` (Vitest).
-* **Performance** : Exécution locale K6 (nécessite binaire K6).
-* **CI/CD** : Prêt pour intégration (Github Actions).
+**Approche** : Tests white-box validant les flux de données entre les couches (UI → API → Base de données mockée).
+
+**Outils** : Vitest, Mocks d'API, React Testing Library
+
+**Flux testés** :
+
+- Authentification complète (formulaire → API → redirection)
+- Création de réservation (UI → POST API → feedback utilisateur)
+- Annulation de réservation (UI → DELETE API → confirmation)
+- Gestion des erreurs réseau et validation des réponses API
+
+**Localisation** : `src/__tests__/integration/`
+
+### 3.3 Tests de Sécurité
+
+**Objectif** : Identifier et prévenir les vulnérabilités courantes selon le Top 10 OWASP.
+
+**Approche** : Tests black-box validant les mécanismes de protection et la robustesse de l'application face aux attaques.
+
+**Outils** : Vitest
+
+**Scénarios couverts** :
+
+1. Protection des routes non authentifiées (401 Unauthorized)
+2. Prévention IDOR - Insecure Direct Object Reference (403 Forbidden)
+3. Validation des droits d'accès (propriétaire vs tiers)
+4. Protection contre l'injection SQL
+5. Protection contre l'injection XSS (sanitization)
+6. Validation stricte des formats de données (400 Bad Request)
+7. Contrôle des méthodes HTTP autorisées
+8. Validation du Content-Type JSON
+9. Rejet des dates passées
+10. Prévention des conflits de réservation (409 Conflict)
+
+**Localisation** : `src/__tests__/security/protection.test.ts`
+
+### 3.4 Tests de Performance
+
+**Objectif** : Valider la tenue en charge, la latence et la stabilité de l'application sous stress.
+
+**Approche** : Tests de charge simulés avec scénarios réalistes d'utilisation.
+
+**Outils** : K6 (Grafana K6)
+
+**Métriques cibles** :
+
+- Temps de réponse p95 < 1000ms
+- Taux d'erreur < 1%
+- Stabilité sous charge modérée
+
+**Scénarios de charge** :
+
+1. Chargement d'assets statiques
+2. Tentative de connexion échouée
+3. Connexion réussie
+4. Accès au dashboard utilisateur
+5. Consultation de la liste des salles
+6. Consultation du détail d'une salle
+7. Consultation des réservations
+8. Création d'une réservation
+9. Déconnexion
+10. Vérification d'accès post-déconnexion
+
+**Localisation** : `src/__tests__/perf/script.js`
+
+---
+
+## 4. Outils
+
+### 4.1 Framework et Technologies
+
+- **Next.js 16** : Framework React avec App Router et API Routes
+- **TypeScript** : Typage statique pour la robustesse du code
+- **Supabase** : Backend as a Service (authentification, base de données PostgreSQL)
+
+### 4.2 Outils de Test
+
+- **Vitest 4.0** : Framework de test unitaire et d'intégration
+- **React Testing Library 16.3** : Bibliothèque de test pour composants React
+- **@testing-library/user-event 14.6** : Simulation d'interactions utilisateur
+- **@testing-library/jest-dom 6.9** : Matchers DOM personnalisés
+- **jsdom 27.4** : Environnement DOM simulé pour les tests
+- **@vitest/coverage-v8 4.0** : Génération de rapports de couverture de code
+
+### 4.3 Tests de Performance
+
+- **K6 (Grafana K6)** : Outil de test de charge et de performance
+
+### 4.4 Outils de Qualité
+
+- **ESLint 9.39** : Analyse statique du code
+- **Prettier 3.7** : Formatage automatique du code
+- **TypeScript 5.9** : Vérification de types
+
+---
 
 ## 5. Critères d'Acceptation
 
-* Tous les tests automatisés (Unitaires, Intégration, Sécurité) doivent être VERTS.
-* Aucune régression sur les flux existants.
-* Tests de performance : 95% des requêtes < 500ms (ou 1000ms selon seuil).
+- Tous les tests automatisés (unitaires, intégration, sécurité) doivent passer avec succès
+- Aucune régression fonctionnelle sur les flux existants
+- Tests de performance : 95% des requêtes < 1000ms, taux d'erreur < 1%
+- Couverture de code : > 80% sur les composants critiques
 
-## 6. Maintenance
+---
 
-* Les mocks sont centralisés dans `src/test/mocks.ts`.
-* Toute nouvelle fonctionnalité doit être accompagnée de ses tests correspondants.
+## 6. Maintenance et Évolution
+
+- Les mocks et fixtures sont centralisés dans `src/test/mocks.ts` et `src/test/fixtures.ts`
+- Toute nouvelle fonctionnalité doit être accompagnée de ses tests correspondants
+- Les tests sont exécutés en continu via `npm test` et peuvent être intégrés dans un pipeline CI/CD
+
+---
+
+**Document Version** : 1.0  
+**Date** : 14 jan. 2026
