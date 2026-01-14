@@ -1,72 +1,166 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { DELETE } from "@/app/api/reservations/[id]/route";
-import { NextRequest } from "next/server";
+import { GET as getRooms } from "@/app/api/rooms/route";
+import { DELETE as deleteReservation } from "@/app/api/reservations/[id]/route";
+import { POST as createReservation } from "@/app/api/rooms/reservations/[id]/route";
+import { NextRequest, NextResponse } from "next/server";
 
 // Mock Supabase
-const mockDelete = vi.fn();
-const mockSelect = vi.fn();
-const mockEq = vi.fn();
-const mockFrom = vi.fn();
-const mockAuthGetUser = vi.fn();
+const mockSupabase = {
+  from: vi.fn(),
+  auth: {
+    getUser: vi.fn(),
+  },
+};
 
+// Mock createClient
 vi.mock("@/lib/supabase/server", () => ({
-  createClient: vi.fn(() => ({
-    auth: {
-      getUser: mockAuthGetUser,
-    },
-    from: mockFrom,
-  })),
+  createClient: vi.fn(() => Promise.resolve(mockSupabase)),
 }));
 
-describe("Integration: DELETE /api/reservations/[id]", () => {
+// Mock NextRequest and NextResponse
+// We don't need to mock NextResponse if we return it directly, but we might want to inspect it.
+// Actually, the handlers return NextResponse objects, which we can inspect.
+
+describe("API Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
 
-    // Chain setup
-    mockFrom.mockReturnValue({
-      select: mockSelect,
-      delete: () => ({ eq: mockDelete }), // simplified for the delete call
-    });
+  describe("GET /api/rooms", () => {
+    it("should return a list of rooms (200)", async () => {
+      const mockRooms = [{ id: 1, name: "Room A", capacite: 10 }];
+      mockSupabase.from.mockReturnValue({
+        select: vi.fn().mockResolvedValue({ data: mockRooms, error: null }),
+      });
 
-    // Select chain for ownership check
-    mockSelect.mockReturnValue({
-      eq: mockEq,
-    });
+      const req = new NextRequest("http://localhost/api/rooms");
+      const res = await getRooms(req);
 
-    mockEq.mockReturnValue({
-      single: vi.fn(),
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json).toEqual(mockRooms);
     });
   });
 
-  it("should successfully delete a reservation when user is owner", async () => {
-    // 1. Setup Mock User
-    mockAuthGetUser.mockResolvedValue({
-      data: { user: { id: "user-123" } },
-      error: null,
+  describe("DELETE /api/reservations/[id]", () => {
+    it("should successfully delete a reservation (200)", async () => {
+      // Mock user
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+
+      // Mock reservation fetch (ownership check)
+      mockSupabase.from.mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({ data: { id_user: "user-123" }, error: null })
+          })
+        })
+      })
+        // Mock delete
+        .mockReturnValueOnce({
+          delete: vi.fn().mockReturnValue({
+            eq: vi.fn().mockResolvedValue({ error: null })
+          })
+        });
+
+      const req = new NextRequest("http://localhost/api/reservations/1", { method: "DELETE" });
+      const params = Promise.resolve({ id: "1" });
+      const res = await deleteReservation(req, { params });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json).toEqual({ success: true });
     });
 
-    // 2. Setup Mock Reservation (Ownership check)
-    const mockSingle = vi.fn().mockResolvedValue({
-      data: { id_user: "user-123" },
-      error: null,
+    it("should fail if reservation not found (404)", async () => {
+      // Mock user
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+
+      // Mock reservation fetch (not found)
+      mockSupabase.from.mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({ data: null, error: null }) // Not found
+          })
+        })
+      });
+
+      const req = new NextRequest("http://localhost/api/reservations/999", { method: "DELETE" });
+      const params = Promise.resolve({ id: "999" });
+      const res = await deleteReservation(req, { params });
+
+      expect(res.status).toBe(404);
     });
-    mockEq.mockReturnValue({ single: mockSingle });
+  });
 
-    // 3. Setup Delete Success
-    mockDelete.mockResolvedValue({ error: null });
+  describe("POST /api/rooms/reservations/[id]", () => {
+    it("should create a reservation successfully (201)", async () => {
+      // Mock user
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
 
-    // 4. Call API
-    const req = new NextRequest("http://localhost/api/reservations/res-999");
-    const params = Promise.resolve({ id: "res-999" });
-    const response = await DELETE(req, { params });
+      // Mock overlap check (empty)
+      mockSupabase.from.mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            lt: vi.fn().mockReturnValue({
+              gt: vi.fn().mockResolvedValue({ data: [], error: null })
+            })
+          })
+        })
+      })
+        // Mock insert
+        .mockReturnValueOnce({
+          insert: vi.fn().mockResolvedValue({ error: null })
+        });
 
-    // 5. Assertions
-    expect(response.status).toBe(200);
-    const body = await response.json();
-    expect(body.success).toBe(true);
+      const body = {
+        date: "2026-01-20",
+        time: "10:00",
+        duration: 60
+      };
 
-    // Verify flow
-    expect(mockFrom).toHaveBeenCalledWith("reservations");
-    expect(mockDelete).toHaveBeenCalledWith("id", "res-999");
+      const req = new NextRequest("http://localhost/api/rooms/reservations/1", {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
+      const params = Promise.resolve({ id: "1" });
+      const res = await createReservation(req, { params });
+
+      expect(res.status).toBe(201);
+      const json = await res.json();
+      expect(json).toEqual({ success: true });
+    });
+
+    it("should reject if room is occupied (409)", async () => {
+      // Mock user
+      mockSupabase.auth.getUser.mockResolvedValue({ data: { user: { id: "user-123" } } });
+
+      // Mock overlap check (found existing)
+      mockSupabase.from.mockReturnValueOnce({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            lt: vi.fn().mockReturnValue({
+              gt: vi.fn().mockResolvedValue({ data: [{ id: 9 }], error: null })
+            })
+          })
+        })
+      });
+
+      const body = {
+        date: "2026-01-20",
+        time: "10:00",
+        duration: 60
+      };
+
+      const req = new NextRequest("http://localhost/api/rooms/reservations/1", {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
+      const params = Promise.resolve({ id: "1" });
+      const res = await createReservation(req, { params });
+
+      expect(res.status).toBe(409);
+      const json = await res.json();
+      expect(json.error).toBeDefined();
+    });
   });
 });

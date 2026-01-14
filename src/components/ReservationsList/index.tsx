@@ -138,6 +138,7 @@ export function ReservationsList({
                       variant="ghost"
                       size="icon"
                       className="text-muted-foreground hover:text-red-600 hover:bg-red-50"
+                      aria-label="Annuler la réservation"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
