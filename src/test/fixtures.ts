@@ -78,11 +78,6 @@ export const mockReservationWithoutRoom: Reservation = {
 // Helper Functions for Creating Variants
 // ============================================================================
 
-/**
- * Creates a mock reservation with optional overrides
- * @param overrides - Partial reservation object to override default values
- * @returns A new Reservation object
- */
 export const createMockReservation = (
   overrides?: Partial<Reservation>
 ): Reservation => ({
@@ -90,11 +85,6 @@ export const createMockReservation = (
   ...overrides,
 });
 
-/**
- * Creates a mock room with optional overrides
- * @param overrides - Partial room object to override default values
- * @returns A new Room object
- */
 export const createMockRoom = (overrides?: Partial<Room>): Room => ({
   ...mockRoom,
   ...overrides,

@@ -10,11 +10,11 @@ export async function GET(
 
   const supabase = await createClient();
   const { data: reservations, error } = await supabase
-    .from("reservations") // Assumed table name 'reservations'
+    .from("reservations")
     .select("*")
     .eq("id_room", id)
-    .gte("end_time", new Date().toISOString()) // Only show current/future reservations
-    .order("start_time", { ascending: true }); // Order by start time
+    .gte("end_time", new Date().toISOString())
+    .order("start_time", { ascending: true });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -51,7 +51,6 @@ export async function POST(
     const body = await req.json();
     const { date, time, duration } = body;
 
-    // Validation: Duration must be multiple of 30 minutes
     if (!duration || duration <= 0 || duration % 30 !== 0) {
       return NextResponse.json(
         { error: "La durée doit être un multiple de 30 minutes." },
@@ -59,16 +58,12 @@ export async function POST(
       );
     }
 
-    // Parse date (YYYY-MM-DD) and time (HH:MM) to create UTC Timestamps
     const [year, month, day] = date.split("-").map(Number);
     const [hours, minutes] = time.split(":").map(Number);
-
-    // Create UTC date (Month is 0-indexed in Date.UTC)
     const startTimestamp = Date.UTC(year, month - 1, day, hours, minutes, 0);
     const startDate = new Date(startTimestamp);
 
-    // Validation: Date must be in the future
-    // Allow a small grace period (e.g. 1 minute) for network latency
+    // 1min grace period for latency
     if (startDate.getTime() < Date.now() - 60000) {
       return NextResponse.json(
         { error: "Vous ne pouvez pas réserver dans le passé." },
@@ -78,7 +73,6 @@ export async function POST(
 
     const endDate = new Date(startTimestamp + duration * 60000);
 
-    // Check for overlaps
     const { data: existingReservations, error: fetchError } = await supabase
       .from("reservations")
       .select("*")
@@ -95,7 +89,6 @@ export async function POST(
       );
     }
 
-    // Insert reservation
     const { error } = await supabase.from("reservations").insert({
       id_room: id,
       id_user: user.id,

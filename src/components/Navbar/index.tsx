@@ -29,7 +29,6 @@ export default function Navbar({ user: initialUser }: NavbarProps) {
   }, [initialUser]);
 
   useEffect(() => {
-    // Listen for changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {

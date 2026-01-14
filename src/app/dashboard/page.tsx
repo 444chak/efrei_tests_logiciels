@@ -51,7 +51,7 @@ export default function DashboardPage() {
     return <div className="p-8">Chargement...</div>;
   }
 
-  // To avoid flashing null user content if redirected
+  // Avoid flash of null content on redirect
   if (!user) return null;
 
   return (

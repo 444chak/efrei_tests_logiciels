@@ -23,7 +23,6 @@ export function RoomReservationForm({
   const [duration, setDuration] = useState("30");
   const [loading, setLoading] = useState(false);
 
-  // Generate time slots every 30 mins
   const timeSlots = [];
   for (let i = 8; i < 20; i++) {
     timeSlots.push(`${i.toString().padStart(2, "0")}:00`);

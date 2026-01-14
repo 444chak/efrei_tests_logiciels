@@ -52,7 +52,6 @@ export default function RoomDetailPage() {
 
     let mounted = true;
 
-    // Fetch room details
     fetch(`/api/rooms/details/${id}`)
       .then(async (res) => {
         if (!res.ok) {

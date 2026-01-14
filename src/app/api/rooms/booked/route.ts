@@ -19,14 +19,12 @@ export async function GET(req: NextRequest) {
     .select("*, rooms(*)")
     .eq("id_user", user.id);
 
-  // Apply filter
   const now = new Date().toISOString();
   if (filter === "upcoming") {
     query = query.gte("end_time", now).order("start_time", { ascending: true });
   } else if (filter === "history") {
     query = query.lt("end_time", now).order("start_time", { ascending: false });
   } else {
-    // 'all'
     query = query.order("start_time", { ascending: false });
   }
 

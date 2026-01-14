@@ -17,7 +17,6 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Check ownership
   const { data: reservation, error: fetchError } = await supabase
     .from("reservations")
     .select("id_user")
