@@ -42,8 +42,8 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
       render(<LoginPage />);
 
       const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
-      const submitButton = screen.getByRole("button", { name: /sign in/i });
+      const passwordInput = screen.getByLabelText(/mot de passe/i);
+      const submitButton = screen.getByRole("button", { name: /se connecter/i });
 
       await userEvent.type(emailInput, "test@example.com");
       await userEvent.type(passwordInput, "password123");
@@ -51,7 +51,7 @@ describe("Functional Tests - User Scenarios (Black Box)", () => {
 
       await waitFor(() => {
         expect(login).toHaveBeenCalled();
-        expect(toast.success).toHaveBeenCalledWith("Logged in successfully");
+        expect(toast.success).toHaveBeenCalledWith("Connexion réussie");
       });
     });
   });

@@ -37,7 +37,6 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "3.4.1",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "5.3.3",
     "zod": "^4.3.5"
   },
   "devDependencies": {
@@ -54,6 +53,7 @@
     "jsdom": "^27.4.0",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.17"
   }
 }

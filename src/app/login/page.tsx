@@ -29,10 +29,10 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: "Veuillez entrer une adresse email valide.",
   }),
   password: z.string().min(1, {
-    message: "Password is required.",
+    message: "Le mot de passe est requis.",
   }),
 });
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
       setError(result.error);
       setLoading(false);
     } else if (result?.success) {
-      toast.success("Logged in successfully");
+      toast.success("Connexion réussie");
       router.push("/");
     }
   }
@@ -73,10 +73,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-center text-2xl font-bold">
-            Sign in
+            Connexion
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your email and password to access your account
+            Entrez votre email et mot de passe pour accéder à votre compte
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Mot de passe</FormLabel>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -112,16 +112,16 @@ export default function LoginPage() {
                 <div className="text-center text-sm text-red-500">{error}</div>
               )}
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing in..." : "Sign in"}
+                {loading ? "Connexion en cours..." : "Se connecter"}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <div className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Vous n'avez pas de compte ?{" "}
             <Link href="/signup" className="text-primary hover:underline">
-              Sign up
+              S'inscrire
             </Link>
           </div>
         </CardFooter>

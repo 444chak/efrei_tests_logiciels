@@ -44,13 +44,13 @@ describe("Navbar", () => {
 
   it("renders Login/Signup links when no user", () => {
     render(<Navbar user={null} />);
-    expect(screen.getByText("Login")).toBeInTheDocument();
-    expect(screen.getByText("Sign Up")).toBeInTheDocument();
+    expect(screen.getByText("Connexion")).toBeInTheDocument();
+    expect(screen.getByText("S'inscrire")).toBeInTheDocument();
   });
 
   it("renders User Avatar when user is present", () => {
     render(<Navbar user={mockUser} />);
-    expect(screen.queryByText("Login")).not.toBeInTheDocument();
+    expect(screen.queryByText("Connexion")).not.toBeInTheDocument();
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
@@ -63,10 +63,10 @@ describe("Navbar", () => {
     fireEvent.click(trigger);
 
     await waitFor(() => {
-      expect(screen.getByText("Dashboard")).toBeInTheDocument();
+      expect(screen.getByText("Tableau de bord")).toBeInTheDocument();
     });
 
-    const logoutBtn = screen.getByText("Log out");
+    const logoutBtn = screen.getByText("Déconnexion");
     expect(logoutBtn).toBeInTheDocument();
 
     fireEvent.click(logoutBtn);
@@ -81,7 +81,7 @@ describe("Navbar", () => {
   it("updates user state on auth change", async () => {
     render(<Navbar user={null} />);
 
-    expect(screen.getByText("Login")).toBeInTheDocument();
+    expect(screen.getByText("Connexion")).toBeInTheDocument();
 
     expect(mockAuth.onAuthStateChange).toHaveBeenCalled();
 
@@ -90,7 +90,7 @@ describe("Navbar", () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByText("Login")).not.toBeInTheDocument();
+      expect(screen.queryByText("Connexion")).not.toBeInTheDocument();
     });
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
@@ -103,7 +103,7 @@ describe("Navbar", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Login")).toBeInTheDocument();
+      expect(screen.getByText("Connexion")).toBeInTheDocument();
     });
   });
 
