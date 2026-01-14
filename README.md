@@ -2,6 +2,14 @@
 
 > Application web moderne de gestion de réservation de salles et créneaux horaires
 
+[![CI Pipeline](https://github.com/444chak/efrei_tests_logiciels/actions/workflows/ci.yml/badge.svg)](https://github.com/444chak/efrei_tests_logiciels/actions/workflows/ci.yml)
+[![Performances](https://github.com/444chak/efrei_tests_logiciels/actions/workflows/nightly.yml/badge.svg)](https://github.com/444chak/efrei_tests_logiciels/actions/workflows/nightly.yml)
+
+![Next.js](https://img.shields.io/badge/Next.js-black?style=flat-square&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-FCC72B?style=flat-square&logo=vitest&logoColor=white)
+
 ---
 
 ## 📋 Présentation du Projet

@@ -81,10 +81,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests
+      - name: Run tests with coverage
         env:
           # Variables d'environnement pour les tests
           # Valeurs fictives car les tests utilisent des mocks
           NEXT_PUBLIC_SUPABASE_URL: https://mock-project.supabase.co
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vY2stcHJvamVjdCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQwOTk2MDAwLCJleHAiOjE5NTY1NzIwMDB9.mock
-        run: npm run test
+        run: npm run test -- --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info,./coverage/coverage-final.json
+          flags: unittests
+          fail_ci_if_error: false
+          verbose: true
