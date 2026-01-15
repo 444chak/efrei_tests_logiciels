@@ -4,6 +4,19 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 
+function getURL(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    const vercelUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
+    return vercelUrl.startsWith("http") ? vercelUrl : `https://${vercelUrl}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 export async function login(formData: FormData) {
   const supabase = await createClient();
 
@@ -34,6 +47,7 @@ export async function signup(formData: FormData) {
     email,
     password,
     options: {
+      emailRedirectTo: `${getURL()}/auth/callback`,
       data: {
         username,
       },

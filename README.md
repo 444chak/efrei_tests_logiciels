@@ -19,6 +19,8 @@ Lien de l'application : [EasyBooking](https://efrei-tests-logiciels.vercel.app/)
 
 **EasyBooking** est une application web full-stack permettant aux utilisateurs de **réserver des créneaux horaires** dans des salles disponibles. L'application offre une interface intuitive pour consulter les disponibilités, effectuer des réservations et gérer ses créneaux réservés.
 
+> ⚠️ Pour l'installation du projet, regardez la section [Installation](#installation) plus bas.
+
 ### 🎯 Fonctionnalités Principales
 
 - ✅ **Authentification sécurisée** (Login/Signup) via Supabase
@@ -190,11 +192,13 @@ Cette section présente l'architecture de tests conforme aux **standards ISTQB**
 
 ## 🚀 Installation & Démarrage
 
+> ⚠️ **Note:** Pour le rendu d'évaluation, utiliser le `.env` fourni sur Teams.
+
 ### Prérequis
 
 - **Node.js** 20.x ou supérieur
 - **npm** ou **yarn**
-- **Clés API Supabase** (à configurer dans `.env.local`)
+- **Clés API Supabase** (à configurer dans `.env`)
 
 ### Installation
 
